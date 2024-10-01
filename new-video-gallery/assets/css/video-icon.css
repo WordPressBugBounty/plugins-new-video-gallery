@@ -1,0 +1,17 @@
+
+/* video gallery icon */
+
+.video-gal-icon i {
+	position: absolute;
+    pointer-events: none;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    transition: opacity 0.5s;
+	font-size: 40px;
+}
+.video-gal-icon {
+	position: relative;
+}
+
+

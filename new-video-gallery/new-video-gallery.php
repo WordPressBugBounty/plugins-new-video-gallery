@@ -4,7 +4,7 @@
 Plugin Name: New Video Gallery
 Plugin URI:  https://awplife.com/
 Description: Create YouTube Vimeo Video Galleries Into WordPress Blog
-Version:     1.5.8
+Version:     1.5.9
 Author:      A WP Life
 Author URI:  https://awplife.com/
 Text Domain: new-video-gallery
@@ -48,7 +48,7 @@ if (!class_exists('New_Video_Gallery')) {
 		protected function _constants()
 		{
 			// Plugin Version
-			define('VG_PLUGIN_VER', '1.5.8');
+			define('VG_PLUGIN_VER', '1.5.9');
 
 			// Plugin Text Domain
 			define('VGP_TXTDM', 'new-video-gallery');

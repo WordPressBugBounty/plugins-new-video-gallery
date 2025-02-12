@@ -900,9 +900,6 @@ if (is_sr_serialized($decodedData)) {
 					<a href="https://awplife.com/demo/video-gallery-premium/" target="_blank"
 						class="button button-primary button-hero load-customize hide-if-no-customize">Check Live
 						Demo</a>
-					<a href="https://awplife.com/demo/video-gallery-premium-admin-demo/" target="_blank"
-						class="button button-primary button-hero load-customize hide-if-no-customize">Try Pro
-						Version</a>
 				</div>
 
 			</div>

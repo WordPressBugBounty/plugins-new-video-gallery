@@ -3,8 +3,8 @@ Contributors: awordpresslife, razipathhan, hanif0991, muhammadshahid, fkfaisalkh
 Donate link: https://paypal.me/awplife
 Tags: video gallery, youtube api gallery, gallery, vimeo gallery, youtube gallery
 Requires at least: 4.0
-Tested up to: 6.7.2
-Stable tag: 1.6.0
+Tested up to: 6.8
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -163,6 +163,10 @@ The following are other recommended plugins by the author:
 7. Video Gallery Settings
 
 == Changelog ==
+
+= 1.6.1 =
+* Bug Fix: Php Bug Fixed.
+* Testing plugin for wordpress 6.8
 
 = 1.6.0 =
 * Bug Fix: Fixed.

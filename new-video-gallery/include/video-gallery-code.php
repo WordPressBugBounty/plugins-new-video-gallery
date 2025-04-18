@@ -34,6 +34,8 @@ while ($loop->have_posts()):
 	$loop->the_post();
 
 	$post_id = esc_attr(get_the_ID());
+	
+if (!function_exists('is_sr_serialized')) {
 	function is_sr_serialized($str)
 	{
 		return ($str == serialize(false) || @unserialize($str) !== false);
@@ -66,6 +68,7 @@ while ($loop->have_posts()):
 		// Decode the JSON string into an associative array
 		$gallery_settings = json_decode($jsonData, true); // Ensure true is passed to get an associative array
 	}
+}
 
 	// columns settings
 	$gal_thumb_size = $gallery_settings['gal_thumb_size'];

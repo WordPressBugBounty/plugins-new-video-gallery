@@ -1,10 +1,10 @@
-﻿=== Video Gallery - Api Gallery, YouTube and Vimeo, Link Gallery ===
+﻿=== Video Gallery – YouTube API, Vimeo & Link Gallery ===
 Contributors: awordpresslife, razipathhan, hanif0991, muhammadshahid, fkfaisalkhan007, sharikkhan007, zishlife, FARAZFRANK
 Donate link: https://paypal.me/awplife
-Tags: video gallery, youtube api gallery, gallery, vimeo gallery, youtube gallery
+Tags: video gallery, youtube gallery, vimeo gallery, youtube api, responsive video gallery, youtube playlist, vimeo videos, embed video, shortcode video gallery, wordpress video plugin, media gallery, api video gallery
 Requires at least: 4.0
-Tested up to: 6.8
-Stable tag: 1.6.1
+Tested up to: 6.8.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,8 @@ You can create YouTube video galleries and Vimeo video galleries using plugin.
 The software is responsive user friendly and can really enhance the rating of your site when people search for related topics and videos whether on Youtube, Vimeo and Wistia or search engines in general. Getting your Youtube, Vimeo or Wistia extension working is straightforward with a few simple steps required to build this great video resources on your WordPress site. The benefits of the gallery plugin are already making a real difference for all kinds of sites from business oriented to hobby or entertainment pages. The great thing about the Gallery is that it allows users to express their creative editing skills when composing a video collection slideshow or even workshop and information content. Being able to engage with site visitors this way directly with gallery also helps to make your site much more reiting.
 
 Copy your video gallery shortcode like **[VIDGAL id=001]** and gallery is ready.
+
+Watch a quick setup tutorial:  
 
 https://www.youtube.com/watch?v=QmAJebgwRdg
 
@@ -79,78 +81,29 @@ https://www.youtube.com/watch?v=QmAJebgwRdg
 
 == Installation ==
 
-Install Video Gallery either via the WordPress.org plugin directory, or by uploading the files to your server.
-
-After activating Video Gallery plugin, go to plugin menu.
-
-Login into admin dashboard.
-
-Download, Install and Activate the Video Gallery plugin.
-
-Create new video gallery using plugin menu.
-
-Configure settings and save.
-
-That's it. You're ready to go!
+1. Upload the plugin files to the `/wp-content/plugins/` directory, or install it through the WordPress plugins screen.
+2. Activate the plugin through the ‘Plugins’ menu in WordPress.
+3. Go to the "Video Gallery" menu in your WordPress dashboard.
+4. Create a new video gallery using YouTube or Vimeo videos.
+5. Save and copy the shortcode to display the gallery anywhere on your site.
 
 == Frequently Asked Questions ==
 
-Have any queries?
+= Can I use both YouTube and Vimeo videos in one gallery? =  
+Yes, the plugin supports mixed galleries.
 
-Please post your question on plguin support forum
+= Is the plugin mobile responsive? =  
+Yes, it is fully responsive and works on all devices.
 
+= Does it support YouTube channel or playlist fetch via API? =  
+Yes, you can fetch videos from a YouTube channel or playlist using API in the premium version.
+
+= How do I display a gallery on a page? =  
+Simply paste the generated shortcode like `[VIDGAL id=001]` into any page, post, or widget.
+
+= Where can I get support? =  
+Please use the plugin support forum on WordPress.org:  
 https://wordpress.org/support/plugin/new-video-gallery/
-
-= Recommended Plugins =
-
-The following are other recommended plugins by the author:
-
-* [Portfolio Filter Gallery](https://wordpress.org/plugins/portfolio-filter-gallery/ "Best Portfolio Filter Gallery") - The Gallery Plugin to create awesome Portfolio Filter Gallery Plugin in minutes. 
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/portfolio-filter-gallery-premium/">Click Here</a>**
-
-* [Media Slider](https://wordpress.org/plugins/media-slider/ "Best Media Slider") - The Media Slider Plugin to create Media / Video Slider Gallery Plugin in minutes. 
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/media-slider-premium/">Click Here</a>**
-
-* [Best Weather Effect Plugin](https://wordpress.org/plugins/weather-effect/ "Best Weather Effect Plugin") - Very Simple And Easy To Design Your Sites With Multiple Effects.
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/weather-effect-premium/">Click Here</a>**
-
-* [Best Grid Gallery Plugin](https://wordpress.org/plugins/new-grid-gallery/ "Best Grid Galley Plugin") - Easy Grid Gallery Widget - Displaying your image in Page & Post widget/sidebar area with very easy.Allows you to customize it to looking exactly what you want.
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/grid-gallery-premium/">Click Here</a>**
-
-* [Social Media Plugin](https://wordpress.org/plugins/new-social-media-widget/ "Social Media") - Display your Social Media Plugin into Widget/Sidebar in WordPress site with very easily.
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/social-media-widget-premium//">Click Here</a>**
-
-* [Image Gallery Plugin](https://wordpress.org/plugins/new-image-gallery/ "Image Gallery Plugin") - Gallery Lightbox - Displays all gallery images into the lightbox slider in just a few seconds.
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/image-gallery-premium/">Click Here</a>**
-
-* [Slider Plugin](https://wordpress.org/plugins/responsive-slider-gallery/ "Slider Plugin") - Fully Responsive Slider Gallery For Wordpress ,You can Show Slider Into Page/Post & Widget/Sidebar By Generate Shortcode.
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/responsive-slider-gallery-premium/">Click Here</a>**
-
-* [Contact Form](https://wordpress.org/plugins/new-contact-form-widget/ "Contact Form Plugin") - Contact Form Widget Shortcode Plugin For WordPress.
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/contact-form-premium/">Click Here</a>**
-
-* [Best Responsive Slider Plugin](https://wordpress.org/plugins/slider-responsive-slideshow/ "Responsive Slider Plugin") - Fully Responsive Light Weight Easy Powerful WordPress Slider Slideshow Plugin.
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/slider-responsive-slideshow-premium//">Click Here</a>**
-
-* [Video Gallery Plugin](https://wordpress.org/plugins/new-video-gallery/ "Best Video Gallery Plugin") - The Best Responsive video gallery For Wordpress.
-
-**Buy Premium Plugin - <a href="https://awplife.com/wordpress-plugins/video-gallery-premium/">Click Here</a>**
-
-* [Facebook Like Share Follow Button](https://wordpress.org/plugins/new-facebook-like-share-follow-button/ "Facebook Like Share Follow Button") - Display your Facebook Like Share Follow Button Plugin into Page/Post & Widget/Sidebar in WordPress sites with very easily.
- 
-* [Google Plus Badge](https://wordpress.org/plugins/new-google-plus-badge/ "Google Plus Badge") - Google+ Badge & Profile Widget For Show Into Widget & sidebar
-
-* [Facebook Likebox Plugin](https://wordpress.org/plugins/facebook-likebox-widget-and-shortcode/ "Facebook Likebox Plugin") - Facebook Light Box Plugin For Wordpress 
-
 
 == Screenshots ==
 
@@ -163,6 +116,12 @@ The following are other recommended plugins by the author:
 7. Video Gallery Settings
 
 == Changelog ==
+
+= 1.6.2 =
+* Bug Fix: Php Bug Fixed.
+* Security patches applied
+* Sanitize bug fix
+* Testing plugin for wordpress 6.8.1
 
 = 1.6.1 =
 * Bug Fix: Php Bug Fixed.
@@ -215,408 +174,15 @@ The following are other recommended plugins by the author:
 * Additional changes: None.
 * Testing plugin for wordpress 6.4.2
 
-= 1.5.0 =
-
-* Enhancements: tested for wordpress 6.3.2
-
-= 1.4.9 =
-
-* Enhancements: tested for wordpress 6.3.1
-
-= 1.4.8 =
-
-* Enhancements: tested for wordpress 6.2.1
-
-= 1.4.7 =
-
-* Enhancements: tested for wordpress 6.1.1
-
-= 1.4.6 =
-
-* YouTube API Gallery Bug Fixed.
-* Enhancements: tested for wordpress 6.1.1
-
-= 1.4.5 =
-
-* YouTube API Gallery Feature Added.
-* Enhancements: tested for wordpress 6.1.1
-
-= 1.4.4 =
-
-* Video thumbnail icon setting added.
-* Enhancements: tested for wordpress 6.0.1
-
-= 1.4.3 =
-
-* wordpress security isshues fixed.
-* Enhancements: tested for wordpress 6.0.1
-
-= 1.4.2 =
-
-* youtue & vimeo icon added.
-* Enhancements: tested for wordpress 6.0.1
-
-= 1.4.1 =
-
-* Enhancements: tested for wordpress 6.0
-
-= 1.4.0 =
-
-* Enhancements: tested for wordpress 5.9.3
-
-= 1.3.9 =
-
-* Enhancements: tested for wordpress 5.9
-
-= 1.3.8 =
-
-* Enhancements: tested for wordpress 5.8.3
-* Video link Bug fixed.
-
-= 1.3.7 =
-
-* Enhancements: tested for wordpress 5.8.2
-* wordpress security isshues fixed
-
-= 1.3.6 =
-
-* Enhancements: tested for wordpress 5.8.1
-
-= 1.3.5 =
-
-* Fixed Security issues.
-* Bug Fix: Fixed.
-* Enhancements: Yes,
-
-= 1.3.4 =
-
-* Enhancements: tested for wordpress 5.7.2
-
-= 1.3.3 =
-
-* Enhancements: tested for wordpress 5.7.1
-
-= 1.3.1 =
-
-* Enhancements: tested for wordpress 5.6.2
-
-= 1.3.0 =
-
-* Enhancements: tested for wordpress 5.6 and setting update.
-* Bug Fix: Yes
-* Additional changes: Title and Desc. css added
-
-= 1.2.10 =
-
-* Enhancements: tested for wordpress 5.5.3
-* Bug Fix: Yes
-
-= 1.2.9 =
-
-* Enhancements: tested for wordpress 5.5.3
-
-= 1.2.8 =
-
-* Enhancements: tested for wordpress 5.5.1
-
-= 1.2.7 =
-
-* Enhancements: tested for wordpress 5.5
-
-= 1.2.6 =
-
-* Enhancements: tested for wordpress 5.4.2
-
-= 1.2.5 =
-
-* Enhancements: tested for wordpress 5.4.1
-
-= 1.2.4 =
-
-* Enhancements: tested for wordpress 5.3.2
-
-= 1.2.3 =
-
-* Enhancements: tested for wordpress 5.3.2
-
-= 1.2.2 =
-
-* Enhancements: tested for wordpress 5.3
-* Additional changes: Bootstrap bugs fixed.
-
-= 1.2.0 =
-
-* Enhancements: tested for wordpress 5.2.3
-* Bug Fix: Yes
-* Additional changes: setting page update and bootstrap library update.
-
-= 1.0.10 =
-
-* Enhancements: tested for wordpress 5.2.3
-
-= 1.0.9 =
-
-* Enhancements: tested for wordpress 5.2.3
-
-= 1.0.8 =
-* Enhancements: tested for wordpress 5.2.2
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 1.0.7 =
-* Enhancements: tested for wordpress 5.2.2
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 1.0.6 =
-* Enhancements: tested for wordpress 5.2.2
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 1.0.5 =
-* Enhancements: tested for wordpress 5.2.1
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 1.0.4 =
-* Enhancements: tested for wordpress 5.2.1
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 1.0.3 =
-* Enhancements: tested for wordpress 5.1.1
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 1.0.2 =
-* Enhancements: tested for wordpress 5.1.1
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 1.0.1 =
-* Enhancements: tested for wordpress 5.1
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 1.0.0 =
-* Enhancements: tested for wordpress 5.0.3
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 0.3.5 =
-* Enhancements: tested for wordpress 5.0.3
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 0.3.4 =
-* Enhancements: tested for wordpress 5.0.2
-* Bug Fix: Yes
-* Additional changes: None.
-
-= 0.3.3 =
-* Enhancements: tested for wordpress 5.0.1
-* Bug Fix: typos fix
-* Additional changes: None.
-
-= 0.3.2 =
-* Enhancements: None.
-* Bug Fix: Yes.
-* Additional changes: Custome shortcode copy function added.
-
-= 0.3.1 =
-* Enhancements: None.
-* Bug Fix: No.
-* Additional changes: update link,
-
-= 0.3.0 =
-* Enhancements: Added hindi translation file.
-* Bug Fix: 1. Background vimeo videoplaying issue fixed, 2. Auto close fixed.
-* Additional changes: None,
-
-= 0.2.17 =
-* Enhancements: Added hindi translation file.
-* Bug Fix: None,
-* Additional changes: None,
-
-= 0.2.16 =
-* Enhancements: tested for wordpress 4.9.8
-* Bug Fix: typos fix
-* Additional changes: plugin is translation ready
-
-= 0.2.15 =
-* Enhancements: tested for wordpress 4.9
-* Bug Fix: None
-* Additional changes: yes, Added theme menu.
-
-Feature Enhancements: Version 0.2.14
-* Enhancements: None
-* Bug Fix: Fixed
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.13
-* Enhancements: None
-* Bug Fix: Fixed
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.12
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.11
-* Enhancements: Tested Upto New version 4.8.1
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.10
-* Enhancements: compatible for Wordpress New version 4.8 
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.9
-* Enhancements: compatible for Wordpress New version 4.8 
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.8
-* Enhancements: compatible for Wordpress New version 4.8 
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.7
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.6
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.5
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.4
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.3
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.2
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.1
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.2.0
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.10
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.9
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.8
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.7
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.6
-* Enhancements: add select video poster setting
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.5
-* Enhancements: add select video poster setting
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.4
-* Enhancements: Compatible For New Version 4.7.1
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.3
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.1.2
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: yes, user interface layout changed
-
-Feature Enhancements: Version 0.1.1
-* Enhancements: yes, two new settings added
-* Bug Fix: None
-* Additional changes: yes, user interface layout changed
-
-Feature Enhancements: Version 0.1.0
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.0.10
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.0.9
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.0.8
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.0.7
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.0.6
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.0.5
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.0.4
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
-
-Feature Enhancements: Version 0.0.1
-* Enhancements: None
-* Bug Fix: None
-* Additional changes: None
 
 == Upgrade Notice ==
-This is an initial release. Start with version 0.0.1 and share your feedback <a href="https://wordpress.org/support/view/plugin-reviews/new-video-gallery/">here</a>.
+Upgrade to the latest version for compatibility with WordPress 6.8.1 and improved performance. Premium features available for more gallery customization.
+
+== Recommended Plugins ==
+
+* [Portfolio Filter Gallery](https://wordpress.org/plugins/portfolio-filter-gallery/)
+* [Media Slider](https://wordpress.org/plugins/media-slider/)
+* [Weather Effect Plugin](https://wordpress.org/plugins/weather-effect/)
+* [Grid Gallery Plugin](https://wordpress.org/plugins/new-grid-gallery/)
+* [Image Gallery Plugin](https://wordpress.org/plugins/new-image-gallery/)
+* [Responsive Slider Gallery](https://wordpress.org/plugins/responsive-slider-gallery/)

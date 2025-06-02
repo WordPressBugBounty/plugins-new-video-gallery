@@ -268,7 +268,7 @@ if (is_sr_serialized($decodedData)) {
 						<div class="col-md-4">
 							<div class="ma_field_discription">
 								<h4>
-									<?php esc_html_e('YouTube Chanel Link', 'animated-live-wall'); ?>
+									<?php esc_html_e('YouTube Chanel Link', 'new-video-gallery'); ?>
 								</h4>
 								<p>
 									<?php esc_html_e('Enter YouTube Chanel Link - ', 'new-video-gallery'); ?>

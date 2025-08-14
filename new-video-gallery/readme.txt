@@ -1,10 +1,10 @@
 ﻿=== Video Gallery – YouTube API, Vimeo & Link Gallery ===
 Contributors: awordpresslife, razipathhan, hanif0991, muhammadshahid, fkfaisalkhan007, sharikkhan007, zishlife, FARAZFRANK
 Donate link: https://paypal.me/awplife
-Tags: video gallery, youtube gallery, vimeo gallery, youtube api, responsive video gallery, youtube playlist, vimeo videos, embed video, shortcode video gallery, wordpress video plugin, media gallery, api video gallery
+Tags: video gallery, youtube gallery, vimeo gallery, youtube api, wordpress video plugin
 Requires at least: 4.0
-Tested up to: 6.8.1
-Stable tag: 1.6.2
+Tested up to: 6.8.2
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -116,6 +116,9 @@ https://wordpress.org/support/plugin/new-video-gallery/
 7. Video Gallery Settings
 
 == Changelog ==
+
+= 1.6.3 =
+* Testing plugin for wordpress 6.8.2
 
 = 1.6.2 =
 * Bug Fix: Php Bug Fixed.

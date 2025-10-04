@@ -53,9 +53,7 @@ https://www.youtube.com/watch?v=QmAJebgwRdg
 > * [Vimeo Gallery](https://awplife.com/demo/video-gallery-premium/vimeo-gallery/ "Vimeo Gallery")
 > * [Youtube Playlist ID](https://awplife.com/demo/video-gallery-premium/youtube-playlist/ "Youtube Playlist ID")
 > * [Mix Gallery](https://awplife.com/demo/video-gallery-premium/mix-gallery/ "Mix Gallery")
-> * [Multipal Columns](https://awplife.com/demo/video-gallery-premium/multiple-columns/ "Multipal Columns")
 > * [Sports Videos](https://awplife.com/demo/video-gallery-premium/sports-videos/ "Sports Videos")
-> * [Fashion Videos](https://awplife.com/demo/video-gallery-premium/fashion-videos/ "Fashion Video")
 > * [Dance Videos](https://awplife.com/demo/video-gallery-premium/dance-videos/ "Dance Video")
 > * [Funny Videos](https://awplife.com/demo/video-gallery-premium/funny-videos/ "Funny Videos")
 

@@ -1,15 +1,19 @@
 <?php
 /**
-@package New Video Gallery
-Plugin Name: Video Gallery – YouTube API, Vimeo & Link Gallery
-Plugin URI:  https://awplife.com/
-Description: Create YouTube Vimeo Video Galleries Into WordPress Blog
-Version:     1.6.3
-Author:      A WP Life
-Author URI:  https://awplife.com/
-Text Domain: new-video-gallery
-Domain Path: /languages
-License:     GPL2
+@package New Video Gallery Premium
+ * Plugin Name:       Video Gallery – YouTube API, Vimeo & Link Gallery
+ * Plugin URI:        https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/
+ * Description:       Create YouTube Vimeo Video Galleries Into WordPress Blog
+ * Version:           1.6.4
+ * Requires at least: 5.0
+ * Requires PHP:      7.0
+ * Author:            A WP Life
+ * Author URI:        https://profiles.wordpress.org/awordpresslife
+ * License:           GPL v2 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:       new-video-gallery
+ * Domain Path:       /languages
+ * License:           GPL2
 
 New Video Gallery is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,8 +28,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with New Video Gallery. If not, see https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
  */
-
-
 
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly
@@ -54,7 +56,7 @@ if (!class_exists('New_Video_Gallery')) {
 			define('VGP_TXTDM', 'new-video-gallery');
 
 			// Plugin Name
-			define('VG_PLUGIN_NAME', __('New Video Gallery', VGP_TXTDM));
+			define('VG_PLUGIN_NAME', 'New Video Gallery');
 
 			// Plugin Slug
 			define('VG_PLUGIN_SLUG', 'video_gallery');
@@ -87,7 +89,7 @@ if (!class_exists('New_Video_Gallery')) {
 		{
 
 			// Load text domain
-			add_action('plugins_loaded', array($this, '_load_textdomain'));
+			add_action('init', array($this, '_load_textdomain'));
 
 			// add Video gallery menu item, change menu filter for multisite
 			add_action('admin_menu', array($this, '_srgallery_menu'), 101);

@@ -1,10 +1,9 @@
 <?php
-/**
-@package New Video Gallery Premium
+/** @package New Video Gallery Premium
  * Plugin Name:       Video Gallery – YouTube API, Vimeo & Link Gallery
  * Plugin URI:        https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/
  * Description:       Create YouTube Vimeo Video Galleries Into WordPress Blog
- * Version:           1.6.4
+ * Version:           1.6.5
  * Requires at least: 5.0
  * Requires PHP:      7.0
  * Author:            A WP Life
@@ -14,19 +13,11 @@
  * Text Domain:       new-video-gallery
  * Domain Path:       /languages
  * License:           GPL2
-
-New Video Gallery is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-any later version.
-
-New Video Gallery is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with New Video Gallery. If not, see https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
+ * New Video Gallery is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or any later version.
+ *
+ * New Video Gallery is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with New Video Gallery. If not, see https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html.
  */
 
 if (!defined('ABSPATH')) {
@@ -50,7 +41,7 @@ if (!class_exists('New_Video_Gallery')) {
 		protected function _constants()
 		{
 			// Plugin Version
-			define('VG_PLUGIN_VER', '1.6.3');
+			define('VG_PLUGIN_VER', '1.6.5');
 
 			// Plugin Text Domain
 			define('VGP_TXTDM', 'new-video-gallery');
@@ -129,12 +120,11 @@ if (!class_exists('New_Video_Gallery')) {
 		public function set_video_gallery_shortcode_column_name($defaults)
 		{
 			$new = array();
-			$shortcode = $columns['video_gallery_shortcode'];  // save the tags column
-			unset($defaults['tags']);   // remove it from the columns list
+			unset($defaults['tags']); // remove it from the columns list
 
 			foreach ($defaults as $key => $value) {
-				if ($key == 'date') {  // when we find the date column
-					$new['video_gallery_shortcode'] = __('Shortcode', 'new-video-gallery');  // put the tags column before it
+				if ($key == 'date') { // when we find the date column
+					$new['video_gallery_shortcode'] = __('Shortcode', 'new-video-gallery'); // put the tags column before it
 				}
 				$new[$key] = $value;
 			}
@@ -153,9 +143,28 @@ if (!class_exists('New_Video_Gallery')) {
 						function VIDEOCopyShortcode" . esc_attr($post_id) . "() {
 							var copyText = document.getElementById('video-gallery-shortcode-" . esc_attr($post_id) . "');
 							copyText.select();
-							document.execCommand('copy');
 							
-							//fade in and out copied message
+							if (navigator.clipboard) {
+								navigator.clipboard.writeText(copyText.value).then(function() {
+									showCopyMsg" . esc_attr($post_id) . "();
+								}).catch(function() {
+									fallbackCopy" . esc_attr($post_id) . "();
+								});
+							} else {
+								fallbackCopy" . esc_attr($post_id) . "();
+							}
+						}
+						
+						function fallbackCopy" . esc_attr($post_id) . "() {
+							try {
+								document.execCommand('copy');
+								showCopyMsg" . esc_attr($post_id) . "();
+							} catch (err) {
+								console.error('Fallback copy failed', err);
+							}
+						}
+
+						function showCopyMsg" . esc_attr($post_id) . "() {
 							jQuery('#copy-msg-" . esc_attr($post_id) . "').fadeIn('1000', 'linear');
 							jQuery('#copy-msg-" . esc_attr($post_id) . "').fadeOut(2500,'swing');
 						}
@@ -223,7 +232,7 @@ if (!class_exists('New_Video_Gallery')) {
 			);
 
 			register_post_type('video_gallery', $args);
-		}//end _New_Video_Gallery()
+		} //end _New_Video_Gallery()
 
 		/**
 		 * Adds Meta Boxes
@@ -287,7 +296,7 @@ if (!class_exists('New_Video_Gallery')) {
 		{
 			$thumbnail = wp_get_attachment_image_src($id, 'medium', true);
 			$attachment = get_post($id); // $id = attachment id
-			?>
+?>
 			<li class="slide">
 				<img class="new-slide" src="<?php echo esc_url($thumbnail[0]); ?>"
 					alt="<?php echo esc_html(get_the_title($id)); ?>" style="height: 150px; width: 100%; border-radius: 8px;">
@@ -295,17 +304,17 @@ if (!class_exists('New_Video_Gallery')) {
 				<select id="slide-type[]" name="slide-type[]" style="width: 100%;" placeholder="Image Title"
 					value="<?php echo esc_html($image_type); ?>">
 					<option value="y" <?php
-					if ($image_type == 'y') {
-						echo 'selected=selected';
-					}
-					?>>
+			if ($image_type == 'y') {
+				echo 'selected=selected';
+			}
+?>>
 						<?php esc_html_e('YouTube', 'new-video-gallery'); ?>
 					</option>
 					<option value="v" <?php
-					if ($image_type == 'v') {
-						echo 'selected=selected';
-					}
-					?>>
+			if ($image_type == 'v') {
+				echo 'selected=selected';
+			}
+?>>
 						<?php esc_html_e('Vimeo', 'new-video-gallery'); ?>
 					</option>
 				</select>
@@ -345,79 +354,79 @@ if (!class_exists('New_Video_Gallery')) {
 		{
 			if (current_user_can('manage_options')) {
 				if (isset($_POST['vg_save_nonce']) && wp_verify_nonce(wp_unslash($_POST['vg_save_nonce']), 'vg_save_settings')) {
-					$video_gallery_option        = isset($_POST['video_gallery_option']) ? sanitize_text_field(wp_unslash($_POST['video_gallery_option'])) : '';
-					$video_gallery_api_key       = isset($_POST['video_gallery_api_key']) ? sanitize_text_field(wp_unslash($_POST['video_gallery_api_key'])) : '';
-					$video_gallery_channel_link  = isset($_POST['video_gallery_channel_link']) ? sanitize_text_field(wp_unslash($_POST['video_gallery_channel_link'])) : '';
-					$gal_thumb_size              = isset($_POST['gal_thumb_size']) ? sanitize_text_field(wp_unslash($_POST['gal_thumb_size'])) : '';
-					$col_large_desktops          = isset($_POST['col_large_desktops']) ? sanitize_text_field(wp_unslash($_POST['col_large_desktops'])) : '';
-					$col_desktops                = isset($_POST['col_desktops']) ? sanitize_text_field(wp_unslash($_POST['col_desktops'])) : '';
-					$col_tablets                 = isset($_POST['col_tablets']) ? sanitize_text_field(wp_unslash($_POST['col_tablets'])) : '';
-					$col_phones                  = isset($_POST['col_phones']) ? sanitize_text_field(wp_unslash($_POST['col_phones'])) : '';
-					$width                       = isset($_POST['width']) ? sanitize_text_field(wp_unslash($_POST['width'])) : '';
-					$height                      = isset($_POST['height']) ? sanitize_text_field(wp_unslash($_POST['height'])) : '';
-					$video_icon                  = isset($_POST['video_icon']) ? sanitize_text_field(wp_unslash($_POST['video_icon'])) : '';
-					$auto_play                   = isset($_POST['auto_play']) ? sanitize_text_field(wp_unslash($_POST['auto_play'])) : '';
-					$auto_close                  = isset($_POST['auto_close']) ? sanitize_text_field(wp_unslash($_POST['auto_close'])) : '';
-					$z_index                     = isset($_POST['z_index']) ? sanitize_text_field(wp_unslash($_POST['z_index'])) : '';
-					$z_index_custom_value        = isset($_POST['z_index_custom_value']) ? sanitize_text_field(wp_unslash($_POST['z_index_custom_value'])) : '';
-					$custom_css                  = isset($_POST['custom_css']) ? sanitize_text_field(wp_unslash($_POST['custom_css'])) : '';
+					$video_gallery_option = isset($_POST['video_gallery_option']) ? sanitize_text_field(wp_unslash($_POST['video_gallery_option'])) : '';
+					$video_gallery_api_key = isset($_POST['video_gallery_api_key']) ? sanitize_text_field(wp_unslash($_POST['video_gallery_api_key'])) : '';
+					$video_gallery_channel_link = isset($_POST['video_gallery_channel_link']) ? sanitize_text_field(wp_unslash($_POST['video_gallery_channel_link'])) : '';
+					$gal_thumb_size = isset($_POST['gal_thumb_size']) ? sanitize_text_field(wp_unslash($_POST['gal_thumb_size'])) : '';
+					$col_large_desktops = isset($_POST['col_large_desktops']) ? sanitize_text_field(wp_unslash($_POST['col_large_desktops'])) : '';
+					$col_desktops = isset($_POST['col_desktops']) ? sanitize_text_field(wp_unslash($_POST['col_desktops'])) : '';
+					$col_tablets = isset($_POST['col_tablets']) ? sanitize_text_field(wp_unslash($_POST['col_tablets'])) : '';
+					$col_phones = isset($_POST['col_phones']) ? sanitize_text_field(wp_unslash($_POST['col_phones'])) : '';
+					$width = isset($_POST['width']) ? sanitize_text_field(wp_unslash($_POST['width'])) : '';
+					$height = isset($_POST['height']) ? sanitize_text_field(wp_unslash($_POST['height'])) : '';
+					$video_icon = isset($_POST['video_icon']) ? sanitize_text_field(wp_unslash($_POST['video_icon'])) : '';
+					$auto_play = isset($_POST['auto_play']) ? sanitize_text_field(wp_unslash($_POST['auto_play'])) : '';
+					$auto_close = isset($_POST['auto_close']) ? sanitize_text_field(wp_unslash($_POST['auto_close'])) : '';
+					$z_index = isset($_POST['z_index']) ? sanitize_text_field(wp_unslash($_POST['z_index'])) : '';
+					$z_index_custom_value = isset($_POST['z_index_custom_value']) ? sanitize_text_field(wp_unslash($_POST['z_index_custom_value'])) : '';
+					$custom_css = isset($_POST['custom_css']) ? sanitize_text_field(wp_unslash($_POST['custom_css'])) : '';
 
-					$image_ids         = array();
-					$image_titles      = array();
-					$image_type        = array();
-					$slide_link        = array();
-					$image_descs       = array();
-					$video_poster      = array();
+					$image_ids = array();
+					$image_titles = array();
+					$image_type = array();
+					$slide_link = array();
+					$image_descs = array();
+					$video_poster = array();
 
-					$image_ids_val = isset($_POST['slide-ids']) ? array_map('sanitize_text_field', wp_unslash((array) $_POST['slide-ids'])) : array();
+					$image_ids_val = isset($_POST['slide-ids']) ? array_map('sanitize_text_field', wp_unslash((array)$_POST['slide-ids'])) : array();
 
 
 					foreach ($image_ids_val as $i => $image_id) {
-						$img_id        = isset($_POST['slide-ids'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-ids'][$i])) : '';
-						$title         = isset($_POST['slide-title'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-title'][$i])) : '';
-						$type          = isset($_POST['slide-type'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-type'][$i])) : '';
-						$link          = isset($_POST['slide-link'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-link'][$i])) : '';
-						$desc          = isset($_POST['slide-desc'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-desc'][$i])) : '';
-						$poster        = isset($_POST['poster-type'][$i]) ? sanitize_text_field(wp_unslash($_POST['poster-type'][$i])) : '';
+						$img_id = isset($_POST['slide-ids'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-ids'][$i])) : '';
+						$title = isset($_POST['slide-title'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-title'][$i])) : '';
+						$type = isset($_POST['slide-type'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-type'][$i])) : '';
+						$link = isset($_POST['slide-link'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-link'][$i])) : '';
+						$desc = isset($_POST['slide-desc'][$i]) ? sanitize_text_field(wp_unslash($_POST['slide-desc'][$i])) : '';
+						$poster = isset($_POST['poster-type'][$i]) ? sanitize_text_field(wp_unslash($_POST['poster-type'][$i])) : '';
 
-						$image_ids[]   = $img_id;
+						$image_ids[] = $img_id;
 						$image_titles[] = $title;
-						$image_type[]   = $type;
-						$slide_link[]   = $link;
-						$image_descs[]  = $desc;
+						$image_type[] = $type;
+						$slide_link[] = $link;
+						$image_descs[] = $desc;
 						$video_poster[] = $poster;
 
 						$single_image_update = array(
-							'ID'           => $img_id,
-							'post_title'   => $title,
+							'ID' => $img_id,
+							'post_title' => $title,
 							'post_content' => $desc,
 						);
 						wp_update_post($single_image_update);
 					}
 
 					$gallery_settings = array(
-						'slide-ids'                 => $image_ids,
-						'slide-title'               => $image_titles,
-						'slide-type'                => $image_type,
-						'slide-link'                => $slide_link,
-						'slide-desc'                => $image_descs,
-						'poster-type'               => $video_poster,
-						'video_gallery_option'      => $video_gallery_option,
-						'video_gallery_api_key'     => $video_gallery_api_key,
-						'video_gallery_channel_link'=> $video_gallery_channel_link,
-						'gal_thumb_size'            => $gal_thumb_size,
-						'col_large_desktops'        => $col_large_desktops,
-						'col_desktops'              => $col_desktops,
-						'col_tablets'               => $col_tablets,
-						'col_phones'                => $col_phones,
-						'width'                     => $width,
-						'height'                    => $height,
-						'video_icon'                => $video_icon,
-						'auto_play'                 => $auto_play,
-						'auto_close'                => $auto_close,
-						'z_index'                   => $z_index,
-						'z_index_custom_value'      => $z_index_custom_value,
-						'custom_css'                => $custom_css,
+						'slide-ids' => $image_ids,
+						'slide-title' => $image_titles,
+						'slide-type' => $image_type,
+						'slide-link' => $slide_link,
+						'slide-desc' => $image_descs,
+						'poster-type' => $video_poster,
+						'video_gallery_option' => $video_gallery_option,
+						'video_gallery_api_key' => $video_gallery_api_key,
+						'video_gallery_channel_link' => $video_gallery_channel_link,
+						'gal_thumb_size' => $gal_thumb_size,
+						'col_large_desktops' => $col_large_desktops,
+						'col_desktops' => $col_desktops,
+						'col_tablets' => $col_tablets,
+						'col_phones' => $col_phones,
+						'width' => $width,
+						'height' => $height,
+						'video_icon' => $video_icon,
+						'auto_play' => $auto_play,
+						'auto_close' => $auto_close,
+						'z_index' => $z_index,
+						'z_index_custom_value' => $z_index_custom_value,
+						'custom_css' => $custom_css,
 					);
 
 					$awl_video_gallery_shortcode_setting = 'awl_vg_settings_' . $post_id;
@@ -444,17 +453,17 @@ if (!class_exists('New_Video_Gallery')) {
 	function VGP_TXTDM_plugin_recommend()
 	{
 		$plugins = array(
-			array(
+				array(
 				'name' => 'Event Management',
 				'slug' => 'event-monster',
 				'required' => false,
 			),
-			array(
+				array(
 				'name' => 'Image Gallery',
 				'slug' => 'new-image-gallery',
 				'required' => false,
 			),
-			array(
+				array(
 				'name' => 'Responsive Slider Gallery',
 				'slug' => 'responsive-slider-gallery',
 				'required' => false,

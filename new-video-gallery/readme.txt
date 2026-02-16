@@ -3,8 +3,8 @@ Contributors: awordpresslife, razipathhan, hanif0991, muhammadshahid, fkfaisalkh
 Donate link: https://paypal.me/awplife
 Tags: video gallery, youtube gallery, vimeo gallery, video player, responsive video
 Requires at least: 5.0
-Tested up to: 6.9
-Stable tag: 1.6.4
+Tested up to: 6.9.1
+Stable tag: 1.6.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -167,6 +167,24 @@ For the free version, please use the WordPress.org support forum. Pro users rece
 7. Video Gallery Admin Settings Panel
 
 == Changelog ==
+
+= 1.6.5 =
+* Fix: Lightbox (Magnific Popup) now appears above theme headers, navbars, and sticky elements
+* Fix: Video gallery shortcode no longer shifts or hides in single post layouts
+* Fix: Multi-line video titles are no longer cropped — gallery container expands to fit
+* Fix: VideoLightning lightbox now displays above sidebar, breadcrumb, and header
+* Fix: Video lightbox close button now shows pointer cursor
+* Fix: Video iframe fills full lightbox height
+* Improved Isotope re-layout timing using font loading and window load events
+* Improved Isotope re-layout timing using font loading and window load events
+* Improved lightbox stacking context handling for better theme compatibility
+* Security: Fixed custom CSS output being unescaped (XSS protection)
+* Security: Secured `unserialize` usage against Object Injection vulnerabilities
+* Fix: Gallery settings now load correctly for multiple galleries on the same page
+* Fix: Resolved undefined variable notices ($columns, $close_button) in PHP logs
+* Fix: Removed duplicate `alt` attributes and non-unique IDs for valid HTML
+* Code cleanup: Replaced deprecated `wp_reset_query` with `wp_reset_postdata`
+* Improvement: Updated copy-to-clipboard to use modern Clipboard API with fallback
 
 = 1.6.4 =
 * Tested with WordPress 6.8.3

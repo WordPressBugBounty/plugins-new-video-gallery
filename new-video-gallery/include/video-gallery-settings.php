@@ -45,7 +45,8 @@ if (is_sr_serialized($decodedData)) {
 	$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
 	$gallery_settings = json_decode(($encodedData), true);
 
-} else {
+}
+else {
 	// Assume the data is in JSON format
 	$jsonData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
 	// Decode the JSON string into an associative array
@@ -57,15 +58,16 @@ if (is_sr_serialized($decodedData)) {
 <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
 <div class="row">
 	<?php
-	if (isset ($gallery_settings['video_gallery_option'])) {
-		$video_gallery_option = $gallery_settings['video_gallery_option'];
-	} else {
-		$video_gallery_option = 'no_api';
-	}
-	?>
+if (isset($gallery_settings['video_gallery_option'])) {
+	$video_gallery_option = $gallery_settings['video_gallery_option'];
+}
+else {
+	$video_gallery_option = 'no_api';
+}
+?>
 	<input type="radio" id="no_api" name="video_gallery_option" value="no_api" <?php if ($video_gallery_option == 'no_api') {
-		echo "checked='checked'";
-	} ?> style="display:none;">
+	echo "checked='checked'";
+}?> style="display:none;">
 	<label for="no_api">
 		<div class="col-lg-6 video_gallery_genrate">
 			<div class="card no_api">
@@ -82,8 +84,8 @@ if (is_sr_serialized($decodedData)) {
 		</div>
 	</label>
 	<input type="radio" id="video_yoyube_api" name="video_gallery_option" value="video_yoyube_api" <?php if ($video_gallery_option == 'video_yoyube_api') {
-		echo "checked='checked'";
-	} ?> style="display:none;">
+	echo "checked='checked'";
+}?> style="display:none;">
 	<label for="video_yoyube_api">
 		<div class="col-lg-6 video_gallery_genrate">
 			<div class="card video_yoyube_api">
@@ -163,16 +165,16 @@ if (is_sr_serialized($decodedData)) {
 					<ul id="remove-slides" class="sbox">
 						<?php
 
-						if (isset ($gallery_settings['slide-ids'])) {
-							$count = 0;
-							foreach ($gallery_settings['slide-ids'] as $id) {
-								$thumbnail = wp_get_attachment_image_src($id, 'medium', true);
-								$attachment = get_post($id);
-								$image_link = $gallery_settings['slide-link'][$count];
-								$image_type = $gallery_settings['slide-type'][$count];
-								$image_desc = $gallery_settings['slide-desc'][$count];
-								$poster_type = $gallery_settings['poster-type'][$count];
-								?>
+if (isset($gallery_settings['slide-ids'])) {
+	$count = 0;
+	foreach ($gallery_settings['slide-ids'] as $id) {
+		$thumbnail = wp_get_attachment_image_src($id, 'medium', true);
+		$attachment = get_post($id);
+		$image_link = $gallery_settings['slide-link'][$count];
+		$image_type = $gallery_settings['slide-type'][$count];
+		$image_desc = $gallery_settings['slide-desc'][$count];
+		$poster_type = $gallery_settings['poster-type'][$count];
+?>
 								<li class="slide">
 									<img class="new-slide" src="<?php echo esc_url($thumbnail[0]); ?>"
 										alt="<?php echo esc_html(get_the_title($id)); ?>"
@@ -183,17 +185,17 @@ if (is_sr_serialized($decodedData)) {
 									<select id="slide-type[]" name="slide-type[]" style="width: 100%;"
 										value="<?php echo esc_html($image_type); ?>">
 										<option value="y" <?php
-										if ($image_type == 'y') {
-											echo 'selected=selected';
-										}
-										?>>
+		if ($image_type == 'y') {
+			echo 'selected=selected';
+		}
+?>>
 											<?php esc_html_e('YouTube', 'new-video-gallery'); ?>
 										</option>
 										<option value="v" <?php
-										if ($image_type == 'v') {
-											echo 'selected=selected';
-										}
-										?>>
+		if ($image_type == 'v') {
+			echo 'selected=selected';
+		}
+?>>
 											<?php esc_html_e('Vimeo', 'new-video-gallery'); ?>
 										</option>
 									</select>
@@ -208,17 +210,17 @@ if (is_sr_serialized($decodedData)) {
 										value="<?php echo esc_html($poster_type); ?>">
 										<optgroup label="Select Poster Option">
 											<option value="internal" <?php
-											if ($poster_type == 'internal') {
-												echo 'selected';
-											}
-											?>>
+		if ($poster_type == 'internal') {
+			echo 'selected';
+		}
+?>>
 												<?php esc_html_e('Use Above Poster', 'new-video-gallery'); ?>
 											</option>
 											<option value="youtube" <?php
-											if ($poster_type == 'youtube') {
-												echo 'selected';
-											}
-											?>>
+		if ($poster_type == 'youtube') {
+			echo 'selected';
+		}
+?>>
 												<?php esc_html_e('Fetch YouTube Poster', 'new-video-gallery'); ?>
 											</option>
 										</optgroup>
@@ -227,10 +229,10 @@ if (is_sr_serialized($decodedData)) {
 										class="button remove-single-slide button-danger" style="width: 100%;" value="Delete">
 								</li>
 								<?php
-								$count++;
-							} // end of foreach
-						} //end of if
-						?>
+		$count++;
+	} // end of foreach
+} //end of if
+?>
 					</ul>
 				</div>
 				<!--///////=============//////////-->
@@ -253,12 +255,13 @@ if (is_sr_serialized($decodedData)) {
 						<div class="col-md-8">
 							<div class="ma_field panel-body">
 								<?php
-								if (isset ($gallery_settings['video_gallery_api_key'])) {
-									$video_gallery_api_key = $gallery_settings['video_gallery_api_key'];
-								} else {
-									$video_gallery_api_key = 'AIzaSyDLlnSIppxQEjiy4Rt5mYJDDHQQI-ynPwQ';
-								}
-								?>
+if (isset($gallery_settings['video_gallery_api_key'])) {
+	$video_gallery_api_key = $gallery_settings['video_gallery_api_key'];
+}
+else {
+	$video_gallery_api_key = 'AIzaSyDLlnSIppxQEjiy4Rt5mYJDDHQQI-ynPwQ';
+}
+?>
 								<textarea class="form-control" id="video_gallery_api_key"
 									name="video_gallery_api_key"><?php echo esc_attr($video_gallery_api_key); ?></textarea>
 							</div>
@@ -278,12 +281,13 @@ if (is_sr_serialized($decodedData)) {
 						<div class="col-md-8">
 							<div class="ma_field panel-body">
 								<?php
-								if (isset ($gallery_settings['video_gallery_channel_link'])) {
-									$video_gallery_channel_link = $gallery_settings['video_gallery_channel_link'];
-								} else {
-									$video_gallery_channel_link = 'https://www.youtube.com/channel/UCqj36njQUT_HCvw6eHzN-hw';
-								}
-								?>
+if (isset($gallery_settings['video_gallery_channel_link'])) {
+	$video_gallery_channel_link = $gallery_settings['video_gallery_channel_link'];
+}
+else {
+	$video_gallery_channel_link = 'https://www.youtube.com/channel/UCqj36njQUT_HCvw6eHzN-hw';
+}
+?>
 								<input type="text" class="form-control" id="video_gallery_channel_link"
 									name="video_gallery_channel_link"
 									value="<?php echo esc_attr($video_gallery_channel_link); ?>">
@@ -312,39 +316,40 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4">
 							<?php
-							if (isset ($gallery_settings['gal_thumb_size'])) {
-								$gal_thumb_size = $gallery_settings['gal_thumb_size'];
-							} else {
-								$gal_thumb_size = 'full';
-							}
-							?>
+if (isset($gallery_settings['gal_thumb_size'])) {
+	$gal_thumb_size = $gallery_settings['gal_thumb_size'];
+}
+else {
+	$gal_thumb_size = 'full';
+}
+?>
 							<select id="gal_thumb_size" name="gal_thumb_size" class="selectbox_settings">
 								<option value="thumbnail" <?php
-								if ($gal_thumb_size == 'thumbnail') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($gal_thumb_size == 'thumbnail') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('Thumbnail – 150 × 150', 'new-video-gallery'); ?>
 								</option>
 								<option value="medium" <?php
-								if ($gal_thumb_size == 'medium') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($gal_thumb_size == 'medium') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('Medium – 300 × 169', 'new-video-gallery'); ?>
 								</option>
 								<option value="large" <?php
-								if ($gal_thumb_size == 'large') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($gal_thumb_size == 'large') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('Large – 840 × 473', 'new-video-gallery'); ?>
 								</option>
 								<option value="full" <?php
-								if ($gal_thumb_size == 'full') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($gal_thumb_size == 'full') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('Full Size – 1280 × 720', 'new-video-gallery'); ?>
 								</option>
 							</select>
@@ -366,53 +371,54 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4">
 							<?php
-							if (isset ($gallery_settings['col_large_desktops'])) {
-								$col_large_desktops = $gallery_settings['col_large_desktops'];
-							} else {
-								$col_large_desktops = 'col-lg-4';
-							}
-							?>
+if (isset($gallery_settings['col_large_desktops'])) {
+	$col_large_desktops = $gallery_settings['col_large_desktops'];
+}
+else {
+	$col_large_desktops = 'col-lg-4';
+}
+?>
 							<select id="col_large_desktops" name="col_large_desktops" class="selectbox_settings">
 								<option value="col-lg-12" <?php
-								if ($col_large_desktops == 'col-lg-12') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_large_desktops == 'col-lg-12') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('1 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-lg-6" <?php
-								if ($col_large_desktops == 'col-lg-6') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_large_desktops == 'col-lg-6') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('2 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-lg-4" <?php
-								if ($col_large_desktops == 'col-lg-4') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_large_desktops == 'col-lg-4') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('3 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-lg-3" <?php
-								if ($col_large_desktops == 'col-lg-3') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_large_desktops == 'col-lg-3') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('4 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-lg-2" <?php
-								if ($col_large_desktops == 'col-lg-2') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_large_desktops == 'col-lg-2') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('6 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-lg-1" <?php
-								if ($col_large_desktops == 'col-lg-1') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_large_desktops == 'col-lg-1') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('12 Column', 'new-video-gallery'); ?>
 								</option>
 							</select>
@@ -434,53 +440,54 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4">
 							<?php
-							if (isset ($gallery_settings['col_desktops'])) {
-								$col_desktops = $gallery_settings['col_desktops'];
-							} else {
-								$col_desktops = 'col-md-3';
-							}
-							?>
+if (isset($gallery_settings['col_desktops'])) {
+	$col_desktops = $gallery_settings['col_desktops'];
+}
+else {
+	$col_desktops = 'col-md-3';
+}
+?>
 							<select id="col_desktops" name="col_desktops" class="selectbox_settings">
 								<option value="col-md-12" <?php
-								if ($col_desktops == 'col-md-12') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_desktops == 'col-md-12') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('1 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-md-6" <?php
-								if ($col_desktops == 'col-md-6') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_desktops == 'col-md-6') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('2 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-md-4" <?php
-								if ($col_desktops == 'col-md-4') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_desktops == 'col-md-4') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('3 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-md-3" <?php
-								if ($col_desktops == 'col-md-3') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_desktops == 'col-md-3') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('4 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-md-2" <?php
-								if ($col_desktops == 'col-md-2') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_desktops == 'col-md-2') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('6 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-md-1" <?php
-								if ($col_desktops == 'col-md-1') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_desktops == 'col-md-1') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('12 Column', 'new-video-gallery'); ?>
 								</option>
 							</select>
@@ -502,46 +509,47 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4">
 							<?php
-							if (isset ($gallery_settings['col_tablets'])) {
-								$col_tablets = $gallery_settings['col_tablets'];
-							} else {
-								$col_tablets = 'col-sm-4';
-							}
-							?>
+if (isset($gallery_settings['col_tablets'])) {
+	$col_tablets = $gallery_settings['col_tablets'];
+}
+else {
+	$col_tablets = 'col-sm-4';
+}
+?>
 							<select id="col_tablets" name="col_tablets" class="selectbox_settings">
 								<option value="col-sm-12" <?php
-								if ($col_tablets == 'col-sm-12') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_tablets == 'col-sm-12') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('1 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-sm-6" <?php
-								if ($col_tablets == 'col-sm-12') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_tablets == 'col-sm-12') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('2 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-sm-4" <?php
-								if ($col_tablets == 'col-sm-4') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_tablets == 'col-sm-4') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('3 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-sm-3" <?php
-								if ($col_tablets == 'col-sm-3') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_tablets == 'col-sm-3') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('4 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-sm-2" <?php
-								if ($col_tablets == 'col-sm-2') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_tablets == 'col-sm-2') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('6 Column', 'new-video-gallery'); ?>
 								</option>
 							</select>
@@ -563,39 +571,40 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4">
 							<?php
-							if (isset ($gallery_settings['col_phones'])) {
-								$col_phones = $gallery_settings['col_phones'];
-							} else {
-								$col_phones = 'col-xs-6';
-							}
-							?>
+if (isset($gallery_settings['col_phones'])) {
+	$col_phones = $gallery_settings['col_phones'];
+}
+else {
+	$col_phones = 'col-xs-6';
+}
+?>
 							<select id="col_phones" name="col_phones" class="selectbox_settings">
 								<option value="col-xs-12" <?php
-								if ($col_phones == 'col-xs-12') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_phones == 'col-xs-12') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('1 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-xs-6" <?php
-								if ($col_phones == 'col-xs-6') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_phones == 'col-xs-6') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('2 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-xs-4" <?php
-								if ($col_phones == 'col-xs-4') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_phones == 'col-xs-4') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('3 Column', 'new-video-gallery'); ?>
 								</option>
 								<option value="col-xs-3" <?php
-								if ($col_phones == 'col-xs-3') {
-									echo 'selected=selected';
-								}
-								?>>
+if ($col_phones == 'col-xs-3') {
+	echo 'selected=selected';
+}
+?>>
 									<?php esc_html_e('4 Column', 'new-video-gallery'); ?>
 								</option>
 							</select>
@@ -617,12 +626,13 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4">
 							<?php
-							if (isset ($gallery_settings['width'])) {
-								$width = $gallery_settings['width'];
-							} else {
-								$width = 700;
-							}
-							?>
+if (isset($gallery_settings['width'])) {
+	$width = $gallery_settings['width'];
+}
+else {
+	$width = 700;
+}
+?>
 
 							<input type="number" class="selectbox_settings" id="width" name="width" placeholder=""
 								value="<?php echo esc_html($width); ?>">
@@ -644,12 +654,13 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4">
 							<?php
-							if (isset ($gallery_settings['height'])) {
-								$height = $gallery_settings['height'];
-							} else {
-								$height = 480;
-							}
-							?>
+if (isset($gallery_settings['height'])) {
+	$height = $gallery_settings['height'];
+}
+else {
+	$height = 480;
+}
+?>
 
 							<input type="number" class="selectbox_settings" id="height" name="height" placeholder=""
 								value="<?php echo esc_html($height); ?>">
@@ -672,29 +683,30 @@ if (is_sr_serialized($decodedData)) {
 						<div class="ma_field p-4">
 							<p class="switch-field em_size_field">
 								<?php
-								if (isset ($gallery_settings['video_icon'])) {
-									$video_icon = $gallery_settings['video_icon'];
-								} else {
-									$video_icon = 'false';
-								}
-								?>
+if (isset($gallery_settings['video_icon'])) {
+	$video_icon = $gallery_settings['video_icon'];
+}
+else {
+	$video_icon = 'false';
+}
+?>
 								<input type="radio" class="form-control" id="video_icon1" name="video_icon" value="true"
 									<?php
-									if ($video_icon == 'true') {
-										echo 'checked';
-									}
-									?>>
+if ($video_icon == 'true') {
+	echo 'checked';
+}
+?>>
 								<label for="video_icon1">
-									<?php esc_html_e('Yes', 'new-video-gallery'); ?>
+									<?php esc_html_e('Hide', 'new-video-gallery'); ?>
 								</label>
 								<input type="radio" class="form-control" id="video_icon2" name="video_icon"
 									value="false" <?php
-									if ($video_icon == 'false') {
-										echo 'checked';
-									}
-									?>>
+if ($video_icon == 'false') {
+	echo 'checked';
+}
+?>>
 								<label for="video_icon2">
-									<?php esc_html_e('No', 'new-video-gallery'); ?>
+									<?php esc_html_e('Show', 'new-video-gallery'); ?>
 								</label>
 							</p>
 						</div>
@@ -721,27 +733,28 @@ if (is_sr_serialized($decodedData)) {
 						<div class="ma_field p-4">
 							<p class="switch-field em_size_field">
 								<?php
-								if (isset ($gallery_settings['auto_play'])) {
-									$auto_play = $gallery_settings['auto_play'];
-								} else {
-									$auto_play = 'true';
-								}
-								?>
+if (isset($gallery_settings['auto_play'])) {
+	$auto_play = $gallery_settings['auto_play'];
+}
+else {
+	$auto_play = 'true';
+}
+?>
 								<input type="radio" class="form-control" id="auto_play1" name="auto_play" value="true"
 									<?php
-									if ($auto_play == 'true') {
-										echo 'checked';
-									}
-									?>>
+if ($auto_play == 'true') {
+	echo 'checked';
+}
+?>>
 								<label for="auto_play1">
 									<?php esc_html_e('Yes', 'new-video-gallery'); ?>
 								</label>
 								<input type="radio" class="form-control" id="auto_play2" name="auto_play" value="false"
 									<?php
-									if ($auto_play == 'false') {
-										echo 'checked';
-									}
-									?>>
+if ($auto_play == 'false') {
+	echo 'checked';
+}
+?>>
 								<label for="auto_play2">
 									<?php esc_html_e('No', 'new-video-gallery'); ?>
 								</label>
@@ -765,27 +778,28 @@ if (is_sr_serialized($decodedData)) {
 						<div class="ma_field p-4">
 							<p class="switch-field em_size_field">
 								<?php
-								if (isset ($gallery_settings['auto_close'])) {
-									$auto_close = $gallery_settings['auto_close'];
-								} else {
-									$auto_close = 'true';
-								}
-								?>
+if (isset($gallery_settings['auto_close'])) {
+	$auto_close = $gallery_settings['auto_close'];
+}
+else {
+	$auto_close = 'true';
+}
+?>
 								<input type="radio" class="form-control" id="auto_close1" name="auto_close" value="true"
 									<?php
-									if ($auto_close == 'true') {
-										echo 'checked';
-									}
-									?>>
+if ($auto_close == 'true') {
+	echo 'checked';
+}
+?>>
 								<label for="auto_close1">
 									<?php esc_html_e('Yes', 'new-video-gallery'); ?>
 								</label>
 								<input type="radio" class="form-control" id="auto_close2" name="auto_close"
 									value="false" <?php
-									if ($auto_close == 'false') {
-										echo 'checked';
-									}
-									?>>
+if ($auto_close == 'false') {
+	echo 'checked';
+}
+?>>
 								<label for="auto_close2">
 									<?php esc_html_e('No', 'new-video-gallery'); ?>
 								</label>
@@ -814,35 +828,38 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4 range-slider switch-field em_size_field">
 							<?php
-							if (isset ($gallery_settings['z_index'])) {
-								$z_index = $gallery_settings['z_index'];
-							} else {
-								$z_index = 'default';
-							}
-							if ($z_index == 'default') {
-								$z_index_custom_value = 2100;
-							} else {
-								if (isset ($gallery_settings['z_index_custom_value'])) {
-									$z_index_custom_value = $gallery_settings['z_index_custom_value'];
-								} else {
-									$z_index_custom_value = 2100;
-								}
-							}
-							?>
+if (isset($gallery_settings['z_index'])) {
+	$z_index = $gallery_settings['z_index'];
+}
+else {
+	$z_index = 'default';
+}
+if ($z_index == 'default') {
+	$z_index_custom_value = 2100;
+}
+else {
+	if (isset($gallery_settings['z_index_custom_value'])) {
+		$z_index_custom_value = $gallery_settings['z_index_custom_value'];
+	}
+	else {
+		$z_index_custom_value = 2100;
+	}
+}
+?>
 
 							<input type="radio" class="form-control" id="z_index1" name="z_index" value="default" <?php
-							if ($z_index == 'default') {
-								echo 'checked';
-							}
-							?>>
+if ($z_index == 'default') {
+	echo 'checked';
+}
+?>>
 							<label for="z_index1">
 								<?php esc_html_e('Default', 'new-video-gallery'); ?>
 							</label>
 							<input type="radio" class="form-control" id="z_index2" name="z_index" value="custom" <?php
-							if ($z_index == 'custom') {
-								echo 'checked';
-							}
-							?>>
+if ($z_index == 'custom') {
+	echo 'checked';
+}
+?>>
 							<label for="z_index2">
 								<?php esc_html_e('Custom', 'new-video-gallery'); ?>
 							</label>
@@ -868,12 +885,13 @@ if (is_sr_serialized($decodedData)) {
 					<div class="col-md-8">
 						<div class="ma_field p-4">
 							<?php
-							if (isset ($gallery_settings['custom_css'])) {
-								$custom_css = $gallery_settings['custom_css'];
-							} else {
-								$custom_css = '';
-							}
-							?>
+if (isset($gallery_settings['custom_css'])) {
+	$custom_css = $gallery_settings['custom_css'];
+}
+else {
+	$custom_css = '';
+}
+?>
 							<textarea name="custom_css" id="custom_css" style="width: 100%; height: 120px;"
 								placeholder="Type direct CSS code here. Don't use <style>...</style> tag."><?php echo esc_html($custom_css); ?></textarea>
 						</div>

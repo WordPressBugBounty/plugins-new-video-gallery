@@ -34,11 +34,12 @@ while ($loop->have_posts()):
 	$loop->the_post();
 
 	$post_id = esc_attr(get_the_ID());
-	
-if (!function_exists('is_sr_serialized')) {
-	function is_sr_serialized($str)
-	{
-		return ($str == serialize(false) || @unserialize($str) !== false);
+
+	if (!function_exists('is_sr_serialized')) {
+		function is_sr_serialized($str)
+		{
+			return ($str == serialize(false) || @unserialize($str) !== false);
+		}
 	}
 
 	// Retrieve the base64 encoded data
@@ -51,7 +52,7 @@ if (!function_exists('is_sr_serialized')) {
 	if (is_sr_serialized($decodedData)) {
 
 		// The data is serialized, so unserialize it
-		$gallery_settings = unserialize($decodedData);
+		$gallery_settings = unserialize($decodedData, ['allowed_classes' => false]);
 		// Optionally, convert the unserialized data to JSON and save it back in base64 encoding for future access
 		// This step is optional but recommended to transition your data format
 
@@ -62,13 +63,13 @@ if (!function_exists('is_sr_serialized')) {
 		$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
 		$gallery_settings = json_decode(($encodedData), true);
 
-	} else {
+	}
+	else {
 		// Assume the data is in JSON format
 		$jsonData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
 		// Decode the JSON string into an associative array
 		$gallery_settings = json_decode($jsonData, true); // Ensure true is passed to get an associative array
 	}
-}
 
 	// columns settings
 	$gal_thumb_size = $gallery_settings['gal_thumb_size'];
@@ -81,121 +82,119 @@ if (!function_exists('is_sr_serialized')) {
 	$video_icon = $gallery_settings['video_icon'];
 	$auto_play = $gallery_settings['auto_play'];
 	$auto_close = $gallery_settings['auto_close'];
+	$close_button = isset($gallery_settings['close_button']) ? $gallery_settings['close_button'] : 'true';
 	$custom_css = $gallery_settings['custom_css'];
 	$z_index = $gallery_settings['z_index'];
 	if ($z_index == 'default') {
-		$z_index_value = 2100;
-	} else {
+		$z_index_value = 999999;
+	}
+	else {
 		$z_index_value = $gallery_settings['z_index_custom_value'];
 	}
 	// start the video gallery contents
-	if (isset ($gallery_settings['video_gallery_option']))
+	if (isset($gallery_settings['video_gallery_option']))
 		$video_gallery_option = $gallery_settings['video_gallery_option'];
 	else
 		$video_gallery_option = "no_api";
-	if (isset ($gallery_settings['video_gallery_api_key']))
+	if (isset($gallery_settings['video_gallery_api_key']))
 		$video_gallery_api_key = $gallery_settings['video_gallery_api_key'];
 	else
 		$video_gallery_api_key = "";
-	if (isset ($gallery_settings['video_gallery_channel_link']))
+	if (isset($gallery_settings['video_gallery_channel_link']))
 		$video_gallery_channel_link = $gallery_settings['video_gallery_channel_link'];
 	else
 		$video_gallery_channel_link = "";
-	?>
-	<style>
-		<?php
-		if ($video_icon == "true") { ?>
-			.video_icon_<?php echo esc_attr($post_id); ?> {
-				display: none !important;
-			}
+?>
 
-		<?php } ?>
-	</style>
 	<?php
 	if ($video_gallery_option == 'no_api') { ?>
 		<div id="image_gallery_<?php echo esc_attr($video_gallery_id); ?>" class="row all-images">
 			<?php
-			if (isset ($gallery_settings['slide-ids']) && count($gallery_settings['slide-ids']) > 0) {
-				$count = 0;
-				foreach ($gallery_settings['slide-ids'] as $attachment_id) {
-					$thumb = wp_get_attachment_image_src($attachment_id, 'thumb', true);
-					$thumbnail = wp_get_attachment_image_src($attachment_id, 'thumbnail', true);
-					$medium = wp_get_attachment_image_src($attachment_id, 'medium', true);
-					$large = wp_get_attachment_image_src($attachment_id, 'large', true);
-					$full = wp_get_attachment_image_src($attachment_id, 'full', true);
-					$attachment_details = get_post($attachment_id);
-					$src = $attachment_details->guid;
-					$title = $attachment_details->post_title;
-					$description = $attachment_details->post_content;
-					$video_type = $gallery_settings['slide-type'][$count];
-					$video_id = $gallery_settings['slide-link'][$count];
-					$poster_type = $gallery_settings['poster-type'][$count];
+		if (isset($gallery_settings['slide-ids']) && count($gallery_settings['slide-ids']) > 0) {
+			$count = 0;
+			foreach ($gallery_settings['slide-ids'] as $attachment_id) {
+				$thumb = wp_get_attachment_image_src($attachment_id, 'thumb', true);
+				$thumbnail = wp_get_attachment_image_src($attachment_id, 'thumbnail', true);
+				$medium = wp_get_attachment_image_src($attachment_id, 'medium', true);
+				$large = wp_get_attachment_image_src($attachment_id, 'large', true);
+				$full = wp_get_attachment_image_src($attachment_id, 'full', true);
+				$attachment_details = get_post($attachment_id);
+				$src = $attachment_details->guid;
+				$title = $attachment_details->post_title;
+				$description = $attachment_details->post_content;
+				$video_type = $gallery_settings['slide-type'][$count];
+				$video_id = $gallery_settings['slide-link'][$count];
+				$poster_type = $gallery_settings['poster-type'][$count];
 
-					// set thumbnail size
-					if ($gal_thumb_size == 'thumbnail') {
-						$thumbnail_url = $thumbnail[0];
-					}
-					if ($gal_thumb_size == 'medium') {
-						$thumbnail_url = $medium[0];
-					}
-					if ($gal_thumb_size == 'large') {
-						$thumbnail_url = $large[0];
-					}
-					if ($gal_thumb_size == 'full') {
-						$thumbnail_url = $full[0];
-					}
-					if ($poster_type == 'youtube' && $video_type == 'y') {
-						$thumbnail_url = "https://img.youtube.com/vi/$video_id/hqdefault.jpg";
-					}
-					?>
+				// set thumbnail size
+				if ($gal_thumb_size == 'thumbnail') {
+					$thumbnail_url = $thumbnail[0];
+				}
+				if ($gal_thumb_size == 'medium') {
+					$thumbnail_url = $medium[0];
+				}
+				if ($gal_thumb_size == 'large') {
+					$thumbnail_url = $large[0];
+				}
+				if ($gal_thumb_size == 'full') {
+					$thumbnail_url = $full[0];
+				}
+				if ($poster_type == 'youtube' && $video_type == 'y') {
+					$thumbnail_url = "https://img.youtube.com/vi/$video_id/hqdefault.jpg";
+				}
+?>
 					<div
 						class="single-image <?php echo esc_attr($col_large_desktops); ?> <?php echo esc_attr($col_desktops); ?> <?php echo esc_attr($col_tablets); ?> <?php echo esc_attr($col_phones); ?>">
 						<figure>
 							<div class="video-gal-icon">
 								<img class="img-thumbnail vid-<?php echo esc_attr($video_gallery_id); ?>"
 									src="<?php echo esc_url($thumbnail_url); ?>" alt="<?php echo esc_html($title); ?>"
-									data-video-id="<?php echo esc_attr($video_type); ?>-<?php echo esc_attr($video_id); ?>"
-									alt="<?php echo esc_html($title); ?>">
-								<?php if ($video_type == "y") { ?>
-									<i id="i-icon" class="video_icon_<?php echo esc_attr($post_id); ?>">
+									data-video-id="<?php echo esc_attr($video_type); ?>-<?php echo esc_attr($video_id); ?>">
+								<?php if ($video_type == "y" && $video_icon != "true") { ?>
+									<i class="video_icon_<?php echo esc_attr($post_id); ?>">
 										<img src="<?php echo esc_url(VG_PLUGIN_URL . 'assets/img/p-youtube.png'); ?>">
 									</i>
-								<?php }
-								if ($video_type == "v") { ?>
-									<i id="i-icon" class="video_icon_<?php echo esc_attr($post_id); ?>">
+								<?php
+				}
+				if ($video_type == "v" && $video_icon != "true") { ?>
+									<i class="video_icon_<?php echo esc_attr($post_id); ?>">
 										<img src="<?php echo esc_url(VG_PLUGIN_URL . 'assets/img/p-vimeo.png'); ?>">
 									</i>
-								<?php } ?>
+								<?php
+				}?>
 							</div>
 							<div>
 								<?php if ($title) { ?>
 									<div class="vg-title">
 										<?php echo esc_html($title); ?>
 									</div>
-								<?php } ?>
+								<?php
+				}?>
 								<?php if ($description) { ?>
 									<div class="vg-desc">
 										<?php echo esc_html($description); ?>
 									</div>
-								<?php } ?>
+								<?php
+				}?>
 							</div>
 						</figure>
 					</div>
 					<?php
-					$count++;
-				}// end of attachment foreach
-			} else {
-				esc_html_e('Sorry! No video gallery found ', 'new-video-gallery');
-			} // end of if esle of slides avaialble check into slider
-			?>
+				$count++;
+			} // end of attachment foreach
+		}
+		else {
+			esc_html_e('Sorry! No video gallery found ', 'new-video-gallery');
+		} // end of if esle of slides avaialble check into slider
+?>
 		</div>
 	<?php
 	}
 	if ($video_gallery_option == 'video_yoyube_api') {
-		require ("youtube-api-gallery.php");
+		require("youtube-api-gallery.php");
 	}
 endwhile;
-wp_reset_query();
+wp_reset_postdata();
 ?>
 <style>
 	<?php if ($close_button == 'false') { ?>
@@ -203,12 +202,16 @@ wp_reset_query();
 			display: none !important;
 		}
 
-	<?php } ?>
+	<?php
+}?>
 	.single-image .vg-title {
 		font-size: 25px;
 		font-weight: bold;
 		text-align: center;
-		padding: 5px
+		padding: 5px;
+		line-height: 1.3;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
 	}
 
 	.single-image .vg-desc {
@@ -218,9 +221,10 @@ wp_reset_query();
 
 	.single-image {
 		padding-top: 20px;
+		overflow: visible !important;
 	}
 
-	<?php echo $custom_css; ?>
+	<?php echo wp_strip_all_tags($custom_css); ?>
 </style>
 <script>
 	jQuery(document).ready(function () {
@@ -232,6 +236,16 @@ wp_reset_query();
 		});
 		// layout Isotope after each image loads
 		$grid.imagesLoaded().progress(function () {
+			$grid.isotope('layout');
+		});
+		// Re-layout after fonts load AND text reflow so container height is correct
+		document.fonts.ready.then(function () {
+			requestAnimationFrame(function () {
+				$grid.isotope('layout');
+			});
+		});
+		// Ultimate fallback: re-layout after everything is fully loaded
+		jQuery(window).on('load', function () {
 			$grid.isotope('layout');
 		});
 
@@ -250,5 +264,29 @@ wp_reset_query();
 				}
 			]
 		});
+
+		// Move video lightbox wrappers to <body> to escape
+		// the post content stacking context (fixes sidebar/header overlap)
+		setTimeout(function () {
+			jQuery('.video-wrapper').each(function () {
+				var $wrapper = jQuery(this);
+				// Save reference to the original target before moving
+				var target = $wrapper.closest('.video-target')[0];
+				$wrapper.appendTo('body');
+
+				// Proxy close button / backdrop clicks back to the original target
+				// so VideoLightning's internal close handler still fires
+				$wrapper.on('mouseup', function (e) {
+					var $clicked = jQuery(e.target);
+					if ($clicked.hasClass('video-close') || $clicked.hasClass('video-wrapper')) {
+						if (target) {
+							target.dispatchEvent(new MouseEvent('mouseup', {
+								bubbles: true, button: 0, which: 1
+							}));
+						}
+					}
+				});
+			});
+		}, 100);
 	});
 </script>

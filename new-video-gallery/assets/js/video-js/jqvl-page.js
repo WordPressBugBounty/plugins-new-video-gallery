@@ -4,7 +4,8 @@
 		var calculate_font, font_size;
 		calculate_font = Math.abs( 100 - $( window ).outerWidth() / 10 ) + 100;
 		font_size      = (calculate_font < font_factor) ? calculate_font : font_factor;
-		$( 'body' ).css( "font-size", font_size + "%" );
+		// Disable intrusive body font-size hijacking:
+		// $( 'body' ).css( "font-size", font_size + "%" );
 	}
 
 	function sizing() {

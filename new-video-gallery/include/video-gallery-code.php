@@ -8,17 +8,17 @@ if (!defined('ABSPATH')) {
  */
 // js
 wp_enqueue_script('imagesloaded');
-wp_enqueue_script('awl-vg-isotope-js', VG_PLUGIN_URL . 'assets/js/isotope.pkgd.js', array('jquery'), '', false);
+wp_enqueue_script('awlife-vg-isotope-js');
 
 // video js
-wp_enqueue_script('awl-vg-scale-fix-js', VG_PLUGIN_URL . 'assets/js/video-js/scale.fix.js', array('jquery'), '', true);
-wp_enqueue_script('awl-vg-video-lightning-js', VG_PLUGIN_URL . 'assets/js/video-js/videoLightning.js', array('jquery'), '', true);
-wp_enqueue_script('awl-vg-jqvl-page-js', VG_PLUGIN_URL . 'assets/js/video-js/jqvl-page.js', array('jquery'), '', true);
+wp_enqueue_script('awlife-vg-scale-fix-js');
+wp_enqueue_script('awlife-vg-video-lightning-js');
+wp_enqueue_script('awlife-vg-jqvl-page-js');
 
 
 // custom bootstrap css
-wp_enqueue_style('awl-bootstrap-css', VG_PLUGIN_URL . 'assets/css/video-gallery-bootstrap.css');
-wp_enqueue_style('awl-icon-css', VG_PLUGIN_URL . 'assets/css/video-icon.css');
+wp_enqueue_style('awlife-bootstrap-css');
+wp_enqueue_style('awlife-icon-css');
 
 
 $video_gallery_id = esc_attr($post_id['id']);
@@ -35,61 +35,78 @@ while ($loop->have_posts()):
 
 	$post_id = esc_attr(get_the_ID());
 
-	if (!function_exists('is_sr_serialized')) {
-		function is_sr_serialized($str)
+	if (!function_exists('nvgall_is_serialized')) {
+		function nvgall_is_serialized($str)
 		{
-			return ($str == serialize(false) || @unserialize($str) !== false);
+			return ($str === serialize(false) || @unserialize($str) !== false);
 		}
 	}
 
-	// Retrieve the base64 encoded data
-	$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+	if (!function_exists('nvg_is_serialized')) {
+		function nvg_is_serialized($str)
+		{
+			return nvgall_is_serialized($str);
+		}
+	}
+
+	if (!function_exists('is_sr_serialized')) {
+		function is_sr_serialized($str)
+		{
+			return nvgall_is_serialized($str);
+		}
+	}
+
+	// Retrieve the data with prefix compliance and absolute fallback safeguards
+	$encodedData = get_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, true);
+	if (empty($encodedData)) {
+		$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+	}
 
 	// Decode the base64 encoded data
 	$decodedData = base64_decode($encodedData);
 
 	// Check if the data is serialized
-	if (is_sr_serialized($decodedData)) {
+	if (nvgall_is_serialized($decodedData)) {
 
 		// The data is serialized, so unserialize it
 		$gallery_settings = unserialize($decodedData, ['allowed_classes' => false]);
-		// Optionally, convert the unserialized data to JSON and save it back in base64 encoding for future access
-		// This step is optional but recommended to transition your data format
-
+		// Convert the unserialized data to JSON and save it back in the new prefix key
 		$jsonEncodedData = json_encode($gallery_settings);
-		update_post_meta($post_id, 'awl_vg_settings_' . $post_id, $jsonEncodedData);
+		update_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, $jsonEncodedData);
 
 		// Now, to use the newly saved format, fetch and decode again
-		$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+		$encodedData = get_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, true);
 		$gallery_settings = json_decode(($encodedData), true);
 
 	}
 	else {
-		// Assume the data is in JSON format
-		$jsonData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+		// Assume the data is in JSON format and fetch the new key first, fallback to the legacy key
+		$jsonData = get_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, true);
+		if (empty($jsonData)) {
+			$jsonData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+		}
 		// Decode the JSON string into an associative array
 		$gallery_settings = json_decode($jsonData, true); // Ensure true is passed to get an associative array
 	}
 
 	// columns settings
-	$gal_thumb_size = $gallery_settings['gal_thumb_size'];
-	$col_large_desktops = $gallery_settings['col_large_desktops'];
-	$col_desktops = $gallery_settings['col_desktops'];
-	$col_tablets = $gallery_settings['col_tablets'];
-	$col_phones = $gallery_settings['col_phones'];
-	$width = $gallery_settings['width'];
-	$height = $gallery_settings['height'];
-	$video_icon = $gallery_settings['video_icon'];
-	$auto_play = $gallery_settings['auto_play'];
-	$auto_close = $gallery_settings['auto_close'];
-	$close_button = isset($gallery_settings['close_button']) ? $gallery_settings['close_button'] : 'true';
-	$custom_css = $gallery_settings['custom_css'];
-	$z_index = $gallery_settings['z_index'];
+	$gal_thumb_size = $gallery_settings['gal_thumb_size'] ?? 'full';
+	$col_large_desktops = $gallery_settings['col_large_desktops'] ?? 'col-lg-4';
+	$col_desktops = $gallery_settings['col_desktops'] ?? 'col-md-4';
+	$col_tablets = $gallery_settings['col_tablets'] ?? 'col-sm-6';
+	$col_phones = $gallery_settings['col_phones'] ?? 'col-xs-12';
+	$width = $gallery_settings['width'] ?? '';
+	$height = $gallery_settings['height'] ?? '';
+	$video_icon = $gallery_settings['video_icon'] ?? 'play';
+	$auto_play = $gallery_settings['auto_play'] ?? 'false';
+	$auto_close = $gallery_settings['auto_close'] ?? 'false';
+	$close_button = $gallery_settings['close_button'] ?? 'true';
+	$z_index = $gallery_settings['z_index'] ?? 'default';
 	if ($z_index == 'default') {
 		$z_index_value = 999999;
 	}
 	else {
-		$z_index_value = $gallery_settings['z_index_custom_value'];
+		$z_index_value = $gallery_settings['z_index_custom_value'] ?? '';
 	}
 	// start the video gallery contents
 	if (isset($gallery_settings['video_gallery_option']))
@@ -122,9 +139,9 @@ while ($loop->have_posts()):
 				$src = $attachment_details->guid;
 				$title = $attachment_details->post_title;
 				$description = $attachment_details->post_content;
-				$video_type = $gallery_settings['slide-type'][$count];
-				$video_id = $gallery_settings['slide-link'][$count];
-				$poster_type = $gallery_settings['poster-type'][$count];
+				$video_type = $gallery_settings['slide-type'][$count] ?? 'y';
+				$video_id = $gallery_settings['slide-link'][$count] ?? '';
+				$poster_type = $gallery_settings['poster-type'][$count] ?? 'internal';
 
 				// set thumbnail size
 				if ($gal_thumb_size == 'thumbnail') {
@@ -152,13 +169,13 @@ while ($loop->have_posts()):
 									data-video-id="<?php echo esc_attr($video_type); ?>-<?php echo esc_attr($video_id); ?>">
 								<?php if ($video_type == "y" && $video_icon != "true") { ?>
 									<i class="video_icon_<?php echo esc_attr($post_id); ?>">
-										<img src="<?php echo esc_url(VG_PLUGIN_URL . 'assets/img/p-youtube.png'); ?>">
+										<img src="<?php echo esc_url(NVGALL_PLUGIN_URL . 'assets/img/p-youtube.png'); ?>">
 									</i>
 								<?php
 				}
 				if ($video_type == "v" && $video_icon != "true") { ?>
 									<i class="video_icon_<?php echo esc_attr($post_id); ?>">
-										<img src="<?php echo esc_url(VG_PLUGIN_URL . 'assets/img/p-vimeo.png'); ?>">
+										<img src="<?php echo esc_url(NVGALL_PLUGIN_URL . 'assets/img/p-vimeo.png'); ?>">
 									</i>
 								<?php
 				}?>
@@ -191,102 +208,106 @@ while ($loop->have_posts()):
 	<?php
 	}
 	if ($video_gallery_option == 'video_yoyube_api') {
-		require("youtube-api-gallery.php");
+		$youtube_gallery_path = NVGALL_PLUGIN_DIR . 'include/youtube-api-gallery.php';
+		if ( file_exists( $youtube_gallery_path ) ) {
+			require $youtube_gallery_path;
+		}
 	}
 endwhile;
 wp_reset_postdata();
-?>
-<style>
-	<?php if ($close_button == 'false') { ?>
-		.video-close {
-			display: none !important;
-		}
 
-	<?php
-}?>
-	.single-image .vg-title {
-		font-size: 25px;
-		font-weight: bold;
-		text-align: center;
-		padding: 5px;
-		line-height: 1.3;
-		word-wrap: break-word;
-		overflow-wrap: break-word;
-	}
+// Dynamic styles using standard wp_add_inline_style()
+$custom_css = "";
+if ($close_button == 'false') {
+	$custom_css .= ".video-close { display: none !important; }\n";
+}
+$custom_css .= "
+.single-image .vg-title {
+	font-size: 25px;
+	font-weight: bold;
+	text-align: center;
+	padding: 5px;
+	line-height: 1.3;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+.single-image .vg-desc {
+	font-size: 15px;
+	padding: 5px;
+}
+.single-image {
+	padding-top: 20px;
+	overflow: visible !important;
+}
+";
+wp_add_inline_style('awlife-bootstrap-css', $custom_css);
 
-	.single-image .vg-desc {
-		font-size: 15px;
-		padding: 5px;
-	}
-
-	.single-image {
-		padding-top: 20px;
-		overflow: visible !important;
-	}
-
-	<?php echo wp_strip_all_tags($custom_css); ?>
-</style>
-<script>
-	jQuery(document).ready(function () {
-		// isotope effect function
-		// Method 1 - Initialize Isotope, then trigger layout after each image loads.
-		var $grid = jQuery('.all-images').isotope({
-			// options...
-			itemSelector: '.single-image',
+// Dynamic scripts using standard wp_add_inline_script()
+$autoplay_val = ($auto_play === 'true') ? 'true' : 'false';
+$autoclose_val = ($auto_close === 'true') ? 'true' : 'false';
+$custom_js = "
+jQuery(document).ready(function () {
+	// isotope effect function
+	// Method 1 - Initialize Isotope, then trigger layout after each image loads.
+	var \$grid = jQuery('.all-images').isotope({
+		// options...
+		itemSelector: '.single-image',
+	});
+	// layout Isotope after each image loads
+	\$grid.imagesLoaded().progress(function () {
+		\$grid.isotope('layout');
+	});
+	// Re-layout after fonts load AND text reflow so container height is correct
+	document.fonts.ready.then(function () {
+		requestAnimationFrame(function () {
+			\$grid.isotope('layout');
 		});
-		// layout Isotope after each image loads
-		$grid.imagesLoaded().progress(function () {
-			$grid.isotope('layout');
-		});
-		// Re-layout after fonts load AND text reflow so container height is correct
-		document.fonts.ready.then(function () {
-			requestAnimationFrame(function () {
-				$grid.isotope('layout');
-			});
-		});
-		// Ultimate fallback: re-layout after everything is fully loaded
-		jQuery(window).on('load', function () {
-			$grid.isotope('layout');
-		});
+	});
+	// Ultimate fallback: re-layout after everything is fully loaded
+	jQuery(window).on('load', function () {
+		\$grid.isotope('layout');
+	});
 
-		//video lighting js
-		videoLightning({
-			elements: [
-				{
-					".vid-<?php echo esc_js($video_gallery_id); ?>": {
-						width: '<?php echo esc_js($width); ?>',
-						height: '<?php echo esc_js($height); ?>',
-						autoplay: <?php echo esc_js($auto_play); ?>,
-						autoclose: <?php echo esc_js($auto_close); ?>,
-						zindex: '<?php echo esc_js($z_index_value); ?>',
-						autohide: 2,
+	//video lighting js
+	videoLightning({
+		elements: [
+			{
+				\".vid-" . esc_js($video_gallery_id) . "\": {
+					width: '" . esc_js($width) . "',
+					height: '" . esc_js($height) . "',
+					autoplay: " . $autoplay_val . ",
+					autoclose: " . $autoclose_val . ",
+					zindex: '" . esc_js($z_index_value) . "',
+					autohide: 2,
+				}
+			}
+		]
+	});
+
+	// Move video lightbox wrappers to <body> to escape
+	// the post content stacking context (fixes sidebar/header overlap)
+	setTimeout(function () {
+		jQuery('.video-wrapper').each(function () {
+			var \$wrapper = jQuery(this);
+			// Save reference to the original target before moving
+			var target = \$wrapper.closest('.video-target')[0];
+			\$wrapper.appendTo('body');
+
+			// Proxy close button / backdrop clicks back to the original target
+			// so VideoLightning's internal close handler still fires
+			\$wrapper.on('mouseup', function (e) {
+				var \$clicked = jQuery(e.target);
+				if (\$clicked.hasClass('video-close') || \$clicked.hasClass('video-wrapper')) {
+					if (target) {
+						target.dispatchEvent(new MouseEvent('mouseup', {
+							bubbles: true, button: 0, which: 1
+						}));
 					}
 				}
-			]
-		});
-
-		// Move video lightbox wrappers to <body> to escape
-		// the post content stacking context (fixes sidebar/header overlap)
-		setTimeout(function () {
-			jQuery('.video-wrapper').each(function () {
-				var $wrapper = jQuery(this);
-				// Save reference to the original target before moving
-				var target = $wrapper.closest('.video-target')[0];
-				$wrapper.appendTo('body');
-
-				// Proxy close button / backdrop clicks back to the original target
-				// so VideoLightning's internal close handler still fires
-				$wrapper.on('mouseup', function (e) {
-					var $clicked = jQuery(e.target);
-					if ($clicked.hasClass('video-close') || $clicked.hasClass('video-wrapper')) {
-						if (target) {
-							target.dispatchEvent(new MouseEvent('mouseup', {
-								bubbles: true, button: 0, which: 1
-							}));
-						}
-					}
-				});
 			});
-		}, 100);
-	});
-</script>
+		});
+	}, 100);
+});
+";
+wp_add_inline_script('awlife-vg-jqvl-page-js', $custom_js);
+?>

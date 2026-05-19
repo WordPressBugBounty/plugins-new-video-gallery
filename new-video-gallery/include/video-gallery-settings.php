@@ -1,61 +1,68 @@
 <?php
-// toggle button CSS
-wp_enqueue_style('awl-em-css', VG_PLUGIN_URL . 'assets/css/toogle-button.css');
-wp_enqueue_style('awl-go-top-css', VG_PLUGIN_URL . 'assets/css/go-to-top.css');
-wp_enqueue_style('awl-bootstrap-css', VG_PLUGIN_URL . 'assets/css/bootstrap.css');
-wp_enqueue_style('awl-styles-css', VG_PLUGIN_URL . 'assets/css/styles.css');
-
-
-// js
-wp_enqueue_script('awl-bootstrap-js', VG_PLUGIN_URL . 'assets/js/bootstrap.js', array('jquery'), '', true);
-wp_enqueue_script('awl-go-top-js', VG_PLUGIN_URL . 'assets/js/go-to-top.js', array('jquery'), '', true);
-
-
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly
 }
-// css
-wp_enqueue_style('vg-font-awesome-css', VG_PLUGIN_URL . 'assets/css/font-awesome.min.css');
+
+// toggle button CSS
+
 
 $post_id = esc_attr($post->ID);
 
-function is_sr_serialized($str)
-{
-	return ($str == serialize(false) || @unserialize($str) !== false);
+if (!function_exists('nvgall_is_serialized')) {
+	function nvgall_is_serialized($str)
+	{
+		return ($str === serialize(false) || @unserialize($str) !== false);
+	}
 }
 
-// Retrieve the base64 encoded data
-$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+if (!function_exists('nvg_is_serialized')) {
+	function nvg_is_serialized($str)
+	{
+		return nvgall_is_serialized($str);
+	}
+}
+
+if (!function_exists('is_sr_serialized')) {
+	function is_sr_serialized($str)
+	{
+		return nvgall_is_serialized($str);
+	}
+}
+
+// Retrieve the data with prefix compliance and absolute fallback safeguards
+$encodedData = get_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, true);
+if (empty($encodedData)) {
+	$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+}
 
 // Decode the base64 encoded data
 $decodedData = base64_decode($encodedData);
 
 // Check if the data is serialized
-if (is_sr_serialized($decodedData)) {
+if (nvgall_is_serialized($decodedData)) {
 
-	// The data is serialized, so unserialize it
-	$gallery_settings = unserialize($decodedData);
-	// Optionally, convert the unserialized data to JSON and save it back in base64 encoding for future access
-	// This step is optional but recommended to transition your data format
-
+	// The data is serialized, so unserialize it with security check against PHP Object Injection
+	$gallery_settings = unserialize($decodedData, ['allowed_classes' => false]);
+	// Convert the unserialized data to JSON and save it back in the new prefix key
 	$jsonEncodedData = json_encode($gallery_settings);
-	update_post_meta($post_id, 'awl_vg_settings_' . $post_id, $jsonEncodedData);
+	update_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, $jsonEncodedData);
 
 	// Now, to use the newly saved format, fetch and decode again
-	$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+	$encodedData = get_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, true);
 	$gallery_settings = json_decode(($encodedData), true);
 
 }
 else {
-	// Assume the data is in JSON format
-	$jsonData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+	// Assume the data is in JSON format and fetch the new key first, fallback to the legacy key
+	$jsonData = get_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, true);
+	if (empty($jsonData)) {
+		$jsonData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+	}
 	// Decode the JSON string into an associative array
 	$gallery_settings = json_decode($jsonData, true); // Ensure true is passed to get an associative array
 }
 
 // js ?>
-<!-- Return to Top -->
-<a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
 <div class="row">
 	<?php
 if (isset($gallery_settings['video_gallery_option'])) {
@@ -134,8 +141,8 @@ else {
 					<?php esc_html_e('Auto Play Setting', 'new-video-gallery'); ?>
 				</a>
 				<a href="#" class="list-group-item text-center">
-					<span class="dashicons dashicons-media-code"></span><br />
-					<?php esc_html_e('Custom CSS', 'new-video-gallery'); ?>
+					<span class="dashicons dashicons-editor-ol"></span><br />
+					<?php esc_html_e('Z-index', 'new-video-gallery'); ?>
 				</a>
 				<a href="#" class="list-group-item text-center">
 					<span class="dashicons dashicons-cart"></span><br />
@@ -259,11 +266,11 @@ if (isset($gallery_settings['video_gallery_api_key'])) {
 	$video_gallery_api_key = $gallery_settings['video_gallery_api_key'];
 }
 else {
-	$video_gallery_api_key = 'AIzaSyDLlnSIppxQEjiy4Rt5mYJDDHQQI-ynPwQ';
+	$video_gallery_api_key = '';
 }
 ?>
 								<textarea class="form-control" id="video_gallery_api_key"
-									name="video_gallery_api_key"><?php echo esc_attr($video_gallery_api_key); ?></textarea>
+									name="video_gallery_api_key"><?php echo esc_textarea($video_gallery_api_key); ?></textarea>
 							</div>
 						</div>
 					</div>
@@ -811,7 +818,7 @@ if ($auto_close == 'false') {
 
 			<div class="bhoechie-tab-content">
 				<h1>
-					<?php esc_html_e('Extra Other Settings', 'new-video-gallery'); ?>
+					<?php esc_html_e('Z-Index Settings', 'new-video-gallery'); ?>
 				</h1>
 				<hr>
 				<div class="row">
@@ -871,32 +878,7 @@ if ($z_index == 'custom') {
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-md-4">
-						<div class="ma_field_discription">
-							<h4>
-								<?php esc_html_e('Custom CSS', 'new-video-gallery'); ?>
-							</h4>
-							<p>
-								<?php esc_html_e('Apply own css on video gallery and dont use style tag', 'new-video-gallery'); ?>
-							</p>
-						</div>
-					</div>
-					<div class="col-md-8">
-						<div class="ma_field p-4">
-							<?php
-if (isset($gallery_settings['custom_css'])) {
-	$custom_css = $gallery_settings['custom_css'];
-}
-else {
-	$custom_css = '';
-}
-?>
-							<textarea name="custom_css" id="custom_css" style="width: 100%; height: 120px;"
-								placeholder="Type direct CSS code here. Don't use <style>...</style> tag."><?php echo esc_html($custom_css); ?></textarea>
-						</div>
-					</div>
-				</div>
+
 			</div>
 			<div class="bhoechie-tab-content">
 				<h1>
@@ -905,7 +887,7 @@ else {
 				<hr>
 				<!--Grid-->
 				<div class="" style="padding-left: 10px;">
-					<p class="ms-title">Upgrade To Premium For Unloack More Features & Settings</p>
+					<p class="ms-title">Upgrade To Premium For More Features & Settings</p>
 				</div>
 
 				<div class="">
@@ -1079,20 +1061,6 @@ wp_nonce_field('vg_save_settings', 'vg_save_nonce');
 
 	//new editing setting page Start .....
 	//dropdown toggle on change effect
-	jQuery(document).ready(function () {
-		//accordion icon
-		jQuery(function () {
-			function toggleSign(e) {
-				jQuery(e.target)
-					.prev('.panel-heading')
-					.find('i')
-					.toggleClass('fa fa-chevron-down fa fa-chevron-up');
-			}
-			jQuery('#accordion').on('hidden.bs.collapse', toggleSign);
-			jQuery('#accordion').on('shown.bs.collapse', toggleSign);
-
-		});
-	});
 
 	//range slider
 	var rangeSlider = function () {

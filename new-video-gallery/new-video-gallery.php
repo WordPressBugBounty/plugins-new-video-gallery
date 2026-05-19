@@ -1,9 +1,9 @@
 <?php
-/** @package New Video Gallery Premium
+/** @package New Video Gallery
  * Plugin Name:       Video Gallery – YouTube API, Vimeo & Link Gallery
  * Plugin URI:        https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/
  * Description:       Create YouTube Vimeo Video Galleries Into WordPress Blog
- * Version:           1.6.5
+ * Version:           1.7.0
  * Requires at least: 5.0
  * Requires PHP:      7.0
  * Author:            A WP Life
@@ -41,29 +41,22 @@ if (!class_exists('New_Video_Gallery')) {
 		protected function _constants()
 		{
 			// Plugin Version
-			define('VG_PLUGIN_VER', '1.6.5');
+			define('NVGALL_PLUGIN_VER', '1.7.0');
 
 			// Plugin Text Domain
-			define('VGP_TXTDM', 'new-video-gallery');
+			define('NVGALL_TXTDM', 'new-video-gallery');
 
 			// Plugin Name
-			define('VG_PLUGIN_NAME', 'New Video Gallery');
+			define('NVGALL_PLUGIN_NAME', 'New Video Gallery');
 
 			// Plugin Slug
-			define('VG_PLUGIN_SLUG', 'video_gallery');
+			define('NVGALL_PLUGIN_SLUG', 'video_gallery');
 
 			// Plugin Directory Path
-			define('VG_PLUGIN_DIR', plugin_dir_path(__FILE__));
+			define('NVGALL_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 			// Plugin Directory URL
-			define('VG_PLUGIN_URL', plugin_dir_url(__FILE__));
-
-			/**
-			 * Create a key for the .htaccess secure download link.
-			 *
-			 * @uses    NONCE_KEY     Defined in the WP root config.php
-			 */
-			define('VG_SECURE_KEY', md5(NONCE_KEY));
+			define('NVGALL_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 		} // end of constructor function
 
@@ -79,45 +72,38 @@ if (!class_exists('New_Video_Gallery')) {
 		protected function _hooks()
 		{
 
-			// Load text domain
-			add_action('init', array($this, '_load_textdomain'));
-
-			// add Video gallery menu item, change menu filter for multisite
-			add_action('admin_menu', array($this, '_srgallery_menu'), 101);
-
 			// Create Video Gallery Custom Post
-			add_action('init', array($this, '_New_Video_Gallery'));
+			add_action('init', array($this, '_nvgall_cpt_register'));
 
 			// Add meta box to custom post
-			add_action('add_meta_boxes', array($this, '_admin_add_meta_box'));
+			add_action('add_meta_boxes', array($this, '_nvgall_admin_add_meta_box'));
 
-			// loaded during admin init
-			add_action('admin_init', array($this, '_admin_add_meta_box'));
+			add_action('wp_ajax_video_gallery_js', array(&$this, '_nvgall_ajax_video_gallery'));
 
-			add_action('wp_ajax_video_gallery_js', array(&$this, '_ajax_video_gallery'));
+			add_action('save_post', array(&$this, '_nvgall_save_settings'));
 
-			add_action('save_post', array(&$this, '_vg_save_settings'));
+			// Register admin assets enqueue hook
+			add_action('admin_enqueue_scripts', array($this, '_nvgall_admin_enqueue_assets'));
 
-			// Shortcode Compatibility in Text Widgets
-			add_filter('widget_text', 'do_shortcode');
+			// Register frontend assets enqueue hook
+			add_action('wp_enqueue_scripts', array($this, '_nvgall_frontend_enqueue_assets'));
 
-			// add pfg cpt shortcode column - manage_{$post_type}_posts_columns
-			add_filter('manage_video_gallery_posts_columns', array(&$this, 'set_video_gallery_shortcode_column_name'));
+			// add video gallery cpt shortcode column - manage_{$post_type}_posts_columns
+			add_filter('manage_video_gallery_posts_columns', array(&$this, 'nvgall_set_shortcode_column_name'));
 
-			// add pfg cpt shortcode column data - manage_{$post_type}_posts_custom_column
-			add_action('manage_video_gallery_posts_custom_column', array(&$this, 'custom_video_gallery_shodrcode_data'), 10, 2);
+			// add video gallery cpt shortcode column data - manage_{$post_type}_posts_custom_column
+			add_action('manage_video_gallery_posts_custom_column', array(&$this, 'nvgall_custom_shortcode_data'), 10, 2);
 
-			add_action('wp_enqueue_scripts', array(&$this, 'testimonial_enqueue_scripts_in_header'));
+			// Register admin footer scripts for post list view
+			add_action('admin_footer', array($this, '_nvgall_admin_footer_scripts'));
+
+			add_action('wp_ajax_nvgall_load_more_youtube_videos', array($this, 'nvgall_load_more_youtube_videos_ajax'));
+			add_action('wp_ajax_nopriv_nvgall_load_more_youtube_videos', array($this, 'nvgall_load_more_youtube_videos_ajax'));
 
 		} // end of hook function
 
-		public function testimonial_enqueue_scripts_in_header()
-		{
-			wp_enqueue_script('jquery');
-		}
-
 		// Video Gallery table cpt shortcode column before date columns
-		public function set_video_gallery_shortcode_column_name($defaults)
+		public function nvgall_set_shortcode_column_name($defaults)
 		{
 			$new = array();
 			unset($defaults['tags']); // remove it from the columns list
@@ -132,66 +118,23 @@ if (!class_exists('New_Video_Gallery')) {
 		}
 
 		// Video Gallery cpt shortcode column data
-		public function custom_video_gallery_shodrcode_data($column, $post_id)
+		public function nvgall_custom_shortcode_data($column, $post_id)
 		{
 			switch ($column) {
 				case 'video_gallery_shortcode':
 					echo "<input type='text' class='button button-primary' id='video-gallery-shortcode-" . esc_attr($post_id) . "' value='[VDGAL id=" . esc_attr($post_id) . "]' style='font-weight:bold; background-color:#32373C; color:#FFFFFF; text-align:center;' />";
-					echo "<input type='button' class='button button-primary' onclick='return VIDEOCopyShortcode" . esc_attr($post_id) . "();' readonly value='Copy' style='margin-left:4px;' />";
+					echo "<input type='button' class='button button-primary' onclick='nvgCopyListShortcode(" . esc_attr($post_id) . ");' value='Copy' style='margin-left:4px;' />";
 					echo "<span id='copy-msg-" . esc_attr($post_id) . "' class='button button-primary' style='display:none; background-color:#32CD32; color:#FFFFFF; margin-left:4px; border-radius: 4px;'>copied</span>";
-					echo "<script>
-						function VIDEOCopyShortcode" . esc_attr($post_id) . "() {
-							var copyText = document.getElementById('video-gallery-shortcode-" . esc_attr($post_id) . "');
-							copyText.select();
-							
-							if (navigator.clipboard) {
-								navigator.clipboard.writeText(copyText.value).then(function() {
-									showCopyMsg" . esc_attr($post_id) . "();
-								}).catch(function() {
-									fallbackCopy" . esc_attr($post_id) . "();
-								});
-							} else {
-								fallbackCopy" . esc_attr($post_id) . "();
-							}
-						}
-						
-						function fallbackCopy" . esc_attr($post_id) . "() {
-							try {
-								document.execCommand('copy');
-								showCopyMsg" . esc_attr($post_id) . "();
-							} catch (err) {
-								console.error('Fallback copy failed', err);
-							}
-						}
-
-						function showCopyMsg" . esc_attr($post_id) . "() {
-							jQuery('#copy-msg-" . esc_attr($post_id) . "').fadeIn('1000', 'linear');
-							jQuery('#copy-msg-" . esc_attr($post_id) . "').fadeOut(2500,'swing');
-						}
-						</script>
-					";
 					break;
 			}
 		}
-
-		public function _load_textdomain()
-		{
-			load_plugin_textdomain('new-video-gallery', false, dirname(plugin_basename(__FILE__)) . '/languages');
-		}
-
-		public function _srgallery_menu()
-		{
-			$vg_featured_plugin_menu = add_submenu_page('edit.php?post_type=' . VG_PLUGIN_SLUG, __('Featured-Plugin', 'new-video-gallery'), __('Featured Plugin', 'new-video-gallery'), 'administrator', 'sr-feature-plugin-page', array($this, '_vg_feature_plugin_page'));
-			$theme_menu = add_submenu_page('edit.php?post_type=' . VG_PLUGIN_SLUG, __('Our Theme', 'new-video-gallery'), __('Our Theme', 'new-video-gallery'), 'administrator', 'sr-theme-page', array($this, '_vg_theme_page'));
-		}
-
 		/**
 		 * video Gallery Custom Post
 		 * Create gallery post type in admin dashboard.
 		 *
 		 * @access    private
 		 */
-		public function _New_Video_Gallery()
+		public function _nvgall_cpt_register()
 		{
 			$labels = array(
 				'name' => __('Video Gallery', 'new-video-gallery'),
@@ -237,15 +180,15 @@ if (!class_exists('New_Video_Gallery')) {
 		/**
 		 * Adds Meta Boxes
 		 */
-		public function _admin_add_meta_box()
+		public function _nvgall_admin_add_meta_box()
 		{
 			// Syntax: add_meta_box( $id, $title, $callback, $screen, $context, $priority, $callback_args );
-			add_meta_box('1', __('Copy Video Gallery Shortcode', 'new-video-gallery'), array(&$this, '_vg_shortcode_left_metabox'), 'video_gallery', 'side', 'default');
-			add_meta_box('', __('Add Video', 'new-video-gallery'), array(&$this, 'vg_upload_multiple_images'), 'video_gallery', 'normal', 'default');
+			add_meta_box('vg_shortcode_metabox', __('Copy Video Gallery Shortcode', 'new-video-gallery'), array(&$this, '_nvgall_shortcode_left_metabox'), 'video_gallery', 'side', 'default');
+			add_meta_box('vg_upload_images_metabox', __('Add Video', 'new-video-gallery'), array(&$this, 'nvgall_upload_multiple_images'), 'video_gallery', 'normal', 'default');
 		}
 
 		// Video gallery copy shortcode meta box under publish button
-		public function _vg_shortcode_left_metabox($post)
+		public function _nvgall_shortcode_left_metabox($post)
 		{ ?>
 			<p class="input-text-wrap">
 				<input type="text" name="VIDEOCopyShortcode" id="VIDEOCopyShortcode"
@@ -258,7 +201,7 @@ if (!class_exists('New_Video_Gallery')) {
 				<?php esc_html_e('Copy & Embed shotcode into any Page/ Post / Text Widget to display gallery.', 'new-video-gallery'); ?>
 			</p>
 			</p>
-			<span onclick="copyToClipboard('#VIDEOCopyShortcode')" class="vg-copy dashicons dashicons-clipboard"></span>
+			<span onclick="nvgCopyToClipboard('#VIDEOCopyShortcode')" class="vg-copy dashicons dashicons-clipboard"></span>
 			<style>
 				.vg-copy {
 					position: absolute;
@@ -270,7 +213,7 @@ if (!class_exists('New_Video_Gallery')) {
 			</style>
 			<script>
 				jQuery("#vg-copy-code").hide();
-				function copyToClipboard(element) {
+				function nvgCopyToClipboard(element) {
 					var $temp = jQuery("<input>");
 					jQuery("body").append($temp);
 					$temp.val(jQuery(element).val()).select();
@@ -283,19 +226,94 @@ if (!class_exists('New_Video_Gallery')) {
 			<?php
 		}
 
-		public function vg_upload_multiple_images($post)
+		public function _nvgall_admin_enqueue_assets($hook)
 		{
-			wp_enqueue_script('media-upload');
-			wp_enqueue_script('awl-vg-uploader.js', VG_PLUGIN_URL . 'assets/js/awl-vg-uploader.js', array('jquery'));
-			wp_enqueue_style('awl-vg-uploader-css', VG_PLUGIN_URL . 'assets/css/awl-vg-uploader.css');
-			wp_enqueue_style('awl-metabox-css', VG_PLUGIN_URL . 'assets/css/metabox.css');
-			wp_enqueue_media();
-			require_once 'include/video-gallery-settings.php';
+			$screen = get_current_screen();
+			if ( is_object( $screen ) && 'video_gallery' === $screen->post_type ) {
+				// Admin Metabox and Uploader Assets
+				wp_enqueue_script('media-upload');
+				wp_enqueue_script('awlife-vg-uploader.js', NVGALL_PLUGIN_URL . 'assets/js/awlife-vg-uploader.js', array('jquery'));
+				wp_enqueue_style('awlife-vg-uploader-css', NVGALL_PLUGIN_URL . 'assets/css/awlife-vg-uploader.css');
+				wp_enqueue_style('awlife-metabox-css', NVGALL_PLUGIN_URL . 'assets/css/metabox.css');
+				wp_enqueue_media();
+
+				// Settings Panel Visual Assets
+				wp_enqueue_style('awlife-em-css', NVGALL_PLUGIN_URL . 'assets/css/toogle-button.css');
+				wp_enqueue_style('awlife-bootstrap-css', NVGALL_PLUGIN_URL . 'assets/css/bootstrap.css');
+				wp_enqueue_style('awlife-styles-css', NVGALL_PLUGIN_URL . 'assets/css/styles.css');
+			}
 		}
-		public function _vg_ajax_callback_function($id)
+
+		public function _nvgall_frontend_enqueue_assets()
 		{
-			$thumbnail = wp_get_attachment_image_src($id, 'medium', true);
-			$attachment = get_post($id); // $id = attachment id
+			// Register YouTube API Gallery Assets
+			wp_register_script('awlife-vg-youram-simple-js', NVGALL_PLUGIN_URL . 'assets/js/youram-simple.min.js', array('jquery'), NVGALL_PLUGIN_VER, true);
+			wp_register_style('awlife-video-youram-simple-css', NVGALL_PLUGIN_URL . 'assets/css/youram-simple.min.css', array(), NVGALL_PLUGIN_VER);
+
+			// Register Video Gallery Assets
+			wp_register_script('awlife-vg-isotope-js', NVGALL_PLUGIN_URL . 'assets/js/isotope.pkgd.js', array('jquery'), NVGALL_PLUGIN_VER, false);
+			wp_register_script('awlife-vg-scale-fix-js', NVGALL_PLUGIN_URL . 'assets/js/video-js/scale.fix.js', array('jquery'), NVGALL_PLUGIN_VER, true);
+			wp_register_script('awlife-vg-video-lightning-js', NVGALL_PLUGIN_URL . 'assets/js/video-js/videoLightning.js', array('jquery'), NVGALL_PLUGIN_VER, true);
+			wp_register_script('awlife-vg-jqvl-page-js', NVGALL_PLUGIN_URL . 'assets/js/video-js/jqvl-page.js', array('jquery'), NVGALL_PLUGIN_VER, true);
+			wp_register_style('awlife-bootstrap-css', NVGALL_PLUGIN_URL . 'assets/css/video-gallery-bootstrap.css', array(), NVGALL_PLUGIN_VER);
+			wp_register_style('awlife-icon-css', NVGALL_PLUGIN_URL . 'assets/css/video-icon.css', array(), NVGALL_PLUGIN_VER);
+		}
+
+		public function _nvgall_admin_footer_scripts()
+		{
+			$screen = get_current_screen();
+			if ( is_object( $screen ) && 'edit-video_gallery' === $screen->id ) {
+				?>
+				<script>
+				function nvgCopyListShortcode(postId) {
+					var copyText = document.getElementById('video-gallery-shortcode-' + postId);
+					if (!copyText) return;
+					copyText.select();
+					
+					if (navigator.clipboard) {
+						navigator.clipboard.writeText(copyText.value).then(function() {
+							nvgShowCopyMsg(postId);
+						}).catch(function() {
+							nvgFallbackCopy(postId);
+						});
+					} else {
+						nvgFallbackCopy(postId);
+					}
+				}
+				
+				function nvgFallbackCopy(postId) {
+					try {
+						document.execCommand('copy');
+						nvgShowCopyMsg(postId);
+					} catch (err) {
+						console.error('Fallback copy failed', err);
+					}
+				}
+
+				function nvgShowCopyMsg(postId) {
+					jQuery('#copy-msg-' + postId).fadeIn(1000, 'linear');
+					jQuery('#copy-msg-' + postId).fadeOut(2500, 'swing');
+				}
+				</script>
+				<?php
+			}
+		}
+
+		public function nvgall_upload_multiple_images($post)
+		{
+			$settings_path = NVGALL_PLUGIN_DIR . 'include/video-gallery-settings.php';
+			if ( file_exists( $settings_path ) ) {
+				require_once $settings_path;
+			}
+		}
+		public function _nvgall_ajax_callback_function($id)
+		{
+			$image_type  = '';
+			$poster_type = '';
+			$thumbnail   = wp_get_attachment_image_src($id, 'medium', true);
+			$attachment  = get_post($id); // $id = attachment id
+
+			ob_start();
 ?>
 			<li class="slide">
 				<img class="new-slide" src="<?php echo esc_url($thumbnail[0]); ?>"
@@ -338,20 +356,28 @@ if (!class_exists('New_Video_Gallery')) {
 				<input type="button" name="remove-slide" id="remove-slide" style="width: 100%;" class="button" value="Delete">
 			</li>
 			<?php
+			return ob_get_clean();
 		}
 
-		public function _ajax_video_gallery()
+		public function _nvgall_ajax_video_gallery()
 		{
 			if (current_user_can('manage_options')) {
 				if (isset($_POST['vg_add_images_nonce']) && wp_verify_nonce(wp_unslash($_POST['vg_add_images_nonce']), 'vg_add_images')) {
-					$slide_id = isset($_POST['slideId']) ? sanitize_text_field(wp_unslash($_POST['slideId'])) : '';
-					echo esc_attr($this->_vg_ajax_callback_function($slide_id));
+					$slide_id = isset($_POST['slideId']) ? absint(wp_unslash($_POST['slideId'])) : 0;
+					$html     = $this->_nvgall_ajax_callback_function($slide_id);
+					echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 			}
+			wp_die();
 		}
 
-		public function _vg_save_settings($post_id)
+		public function _nvgall_save_settings($post_id)
 		{
+			// Restrict execution to video_gallery post saves only
+			if (get_post_type($post_id) !== 'video_gallery') {
+				return;
+			}
+
 			if (current_user_can('manage_options')) {
 				if (isset($_POST['vg_save_nonce']) && wp_verify_nonce(wp_unslash($_POST['vg_save_nonce']), 'vg_save_settings')) {
 					$video_gallery_option = isset($_POST['video_gallery_option']) ? sanitize_text_field(wp_unslash($_POST['video_gallery_option'])) : '';
@@ -369,7 +395,6 @@ if (!class_exists('New_Video_Gallery')) {
 					$auto_close = isset($_POST['auto_close']) ? sanitize_text_field(wp_unslash($_POST['auto_close'])) : '';
 					$z_index = isset($_POST['z_index']) ? sanitize_text_field(wp_unslash($_POST['z_index'])) : '';
 					$z_index_custom_value = isset($_POST['z_index_custom_value']) ? sanitize_text_field(wp_unslash($_POST['z_index_custom_value'])) : '';
-					$custom_css = isset($_POST['custom_css']) ? sanitize_text_field(wp_unslash($_POST['custom_css'])) : '';
 
 					$image_ids = array();
 					$image_titles = array();
@@ -401,7 +426,10 @@ if (!class_exists('New_Video_Gallery')) {
 							'post_title' => $title,
 							'post_content' => $desc,
 						);
+						// Temporarily unhook to prevent infinite recursive loop on attachment update
+						remove_action('save_post', array($this, '_nvgall_save_settings'));
 						wp_update_post($single_image_update);
+						add_action('save_post', array($this, '_nvgall_save_settings'));
 					}
 
 					$gallery_settings = array(
@@ -426,54 +454,240 @@ if (!class_exists('New_Video_Gallery')) {
 						'auto_close' => $auto_close,
 						'z_index' => $z_index,
 						'z_index_custom_value' => $z_index_custom_value,
-						'custom_css' => $custom_css,
 					);
 
-					$awl_video_gallery_shortcode_setting = 'awl_vg_settings_' . $post_id;
-					update_post_meta($post_id, $awl_video_gallery_shortcode_setting, wp_json_encode($gallery_settings));
+					$nvgall_video_gallery_shortcode_setting = 'nvgall_vg_settings_' . $post_id;
+					update_post_meta($post_id, $nvgall_video_gallery_shortcode_setting, wp_json_encode($gallery_settings));
 				}
 			}
 		}
 
+		private function nvgall_parse_iso8601_duration_helper($duration) {
+			try {
+				$interval = new DateInterval($duration);
+				$hours = $interval->h;
+				$minutes = $interval->i;
+				$seconds = $interval->s;
 
-		public function _vg_feature_plugin_page()
-		{
-			require_once 'featured-plugins/featured-plugins.php';
+				if ($hours > 0) {
+					return sprintf('%d:%02d:%02d', $hours, $minutes, $seconds);
+				}
+				return sprintf('%d:%02d', $minutes, $seconds);
+			} catch (Exception $e) {
+				return '';
+			}
 		}
 
-		// theme page
-		public function _vg_theme_page()
+		public function nvgall_load_more_youtube_videos_ajax()
 		{
-			require_once 'our-theme/awp-theme.php';
+			$post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+			$next_page_token = isset($_POST['next_page_token']) ? sanitize_text_field(wp_unslash($_POST['next_page_token'])) : '';
+
+			if (empty($post_id)) {
+				wp_send_json_error(array('message' => 'Invalid Post ID'));
+			}
+
+			// Retrieve the data with prefix compliance and absolute fallback safeguards
+			$encodedData = get_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, true);
+			if (empty($encodedData)) {
+				$encodedData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+			}
+
+			// Try base64 decoding first
+			$decodedData = base64_decode($encodedData);
+
+			if (function_exists('nvgall_is_serialized') && nvgall_is_serialized($decodedData)) {
+				$gallery_settings = unserialize($decodedData, ['allowed_classes' => false]);
+			} else {
+				$jsonData = get_post_meta($post_id, 'nvgall_vg_settings_' . $post_id, true);
+				if (empty($jsonData)) {
+					$jsonData = get_post_meta($post_id, 'awl_vg_settings_' . $post_id, true);
+				}
+				$gallery_settings = json_decode($jsonData, true);
+			}
+
+			if (empty($gallery_settings)) {
+				wp_send_json_error(array('message' => 'Settings not found'));
+			}
+
+			$video_gallery_api_key = $gallery_settings['video_gallery_api_key'] ?? '';
+			$video_gallery_channel_link = $gallery_settings['video_gallery_channel_link'] ?? '';
+
+			if (empty($video_gallery_api_key) || empty($video_gallery_channel_link)) {
+				wp_send_json_error(array('message' => 'API Key or Channel URL is missing'));
+			}
+
+			$source_link = trim($video_gallery_channel_link);
+			$playlist_id = '';
+			$channel_id = '';
+			$username = '';
+
+			if (strpos($source_link, 'list=') !== false) {
+				$parsed_url = parse_url($source_link);
+				if (isset($parsed_url['query'])) {
+					parse_str($parsed_url['query'], $query_params);
+					if (isset($query_params['list'])) {
+						$playlist_id = sanitize_text_field($query_params['list']);
+					}
+				}
+				if (empty($playlist_id)) {
+					preg_match('/[?&]list=([A-Za-z0-9_-]+)/', $source_link, $matches);
+					if (!empty($matches[1])) {
+						$playlist_id = sanitize_text_field($matches[1]);
+					}
+				}
+			} elseif (preg_match('/^PL[A-Za-z0-9_-]+$/', $source_link)) {
+				$playlist_id = $source_link;
+			} elseif (preg_match('/\/channel\/([A-Za-z0-9_-]+)/', $source_link, $matches)) {
+				$channel_id = sanitize_text_field($matches[1]);
+			} elseif (preg_match('/\/user\/([A-Za-z0-9_-]+)/', $source_link, $matches)) {
+				$username = sanitize_text_field($matches[1]);
+			} elseif (preg_match('/^UC[A-Za-z0-9_-]+$/', $source_link)) {
+				$channel_id = $source_link;
+			} else {
+				$username = sanitize_text_field(basename(rtrim($source_link, '/')));
+			}
+
+			if (empty($playlist_id) && (!empty($channel_id) || !empty($username))) {
+				$transient_key_uploads = 'nvg_yt_uploads_' . md5($source_link . $video_gallery_api_key);
+				$playlist_id = get_transient($transient_key_uploads);
+
+				if ($playlist_id === false) {
+					if (!empty($channel_id)) {
+						$api_url = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=" . urlencode($channel_id) . "&key=" . urlencode($video_gallery_api_key);
+					} else {
+						$api_url = "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forUsername=" . urlencode($username) . "&key=" . urlencode($video_gallery_api_key);
+					}
+
+					$response = wp_safe_remote_get($api_url);
+					if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+						$body = json_decode(wp_remote_retrieve_body($response), true);
+						if (!empty($body['items'][0]['contentDetails']['relatedPlaylists']['uploads'])) {
+							$playlist_id = $body['items'][0]['contentDetails']['relatedPlaylists']['uploads'];
+							set_transient($transient_key_uploads, $playlist_id, DAY_IN_SECONDS);
+						}
+					}
+				}
+			}
+
+			if (empty($playlist_id)) {
+				wp_send_json_error(array('message' => 'Playlist ID not found'));
+			}
+
+			$api_url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=" . urlencode($playlist_id) . "&maxResults=8&key=" . urlencode($video_gallery_api_key);
+			if (!empty($next_page_token)) {
+				$api_url .= "&pageToken=" . urlencode($next_page_token);
+			}
+
+			$videos = array();
+			$new_next_page_token = '';
+
+			$response = wp_safe_remote_get($api_url);
+			if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+				$body = json_decode(wp_remote_retrieve_body($response), true);
+				$new_next_page_token = $body['nextPageToken'] ?? '';
+				if (!empty($body['items'])) {
+					$video_ids = array();
+
+					foreach ($body['items'] as $item) {
+						if (!empty($item['snippet']['resourceId']['videoId'])) {
+							$v_id = $item['snippet']['resourceId']['videoId'];
+							$video_ids[] = $v_id;
+							$videos[$v_id] = array(
+								'id' => $v_id,
+								'title' => $item['snippet']['title'] ?? '',
+								'thumbnail' => $item['snippet']['thumbnails']['medium']['url'] ?? ($item['snippet']['thumbnails']['high']['url'] ?? ($item['snippet']['thumbnails']['default']['url'] ?? '')),
+								'views' => 0,
+								'duration' => ''
+							);
+						}
+					}
+
+					// Fetch statistics (views) and contentDetails (duration) for these video IDs
+					if (!empty($video_ids)) {
+						$ids_string = implode(',', $video_ids);
+						$stats_url = "https://www.googleapis.com/youtube/v3/videos?part=statistics,contentDetails&id=" . urlencode($ids_string) . "&key=" . urlencode($video_gallery_api_key);
+
+						$stats_response = wp_safe_remote_get($stats_url);
+						if (!is_wp_error($stats_response) && wp_remote_retrieve_response_code($stats_response) === 200) {
+							$stats_body = json_decode(wp_remote_retrieve_body($stats_response), true);
+							if (!empty($stats_body['items'])) {
+								foreach ($stats_body['items'] as $stat_item) {
+									$v_id = $stat_item['id'];
+									if (isset($videos[$v_id])) {
+										// View count format
+										if (isset($stat_item['statistics']['viewCount'])) {
+											$views_count = intval($stat_item['statistics']['viewCount']);
+											$videos[$v_id]['views'] = number_format($views_count);
+										}
+										// ISO 8601 duration string parse
+										if (isset($stat_item['contentDetails']['duration'])) {
+											$duration_raw = $stat_item['contentDetails']['duration'];
+											$videos[$v_id]['duration'] = $this->nvgall_parse_iso8601_duration_helper($duration_raw);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			ob_start();
+			if (!empty($videos)) {
+				foreach ($videos as $video) {
+					$thumbnail_url = $video['thumbnail'];
+					$title = $video['title'];
+					$video_id = $video['id'];
+					$duration = $video['duration'];
+					$views = $video['views'];
+					?>
+					<div class="yl-item-wrapper">
+						<div class="yl-item" id="yl-video-<?php echo esc_attr($video_id); ?>">
+							<a class="yl-focus" href="https://www.youtube.com/watch?v=<?php echo esc_attr($video_id); ?>" target="_blank">
+								<div class="yl-thumbnail">
+									<img src="<?php echo esc_url($thumbnail_url); ?>" alt="<?php echo esc_attr($title); ?>">
+									<?php if (!empty($duration)) { ?>
+										<div class="yl-duration"><svg class="nvg-yt-icon" width="12" height="12" viewBox="0 0 16 12" fill="#fff" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:3px;display:none;"><path d="M15.8 1.9c-.2-.7-.7-1.3-1.4-1.5C13.2 0 8 0 8 0S2.8 0 1.6.4C.9.6.4 1.2.2 1.9 0 3.1 0 6 0 6s0 2.9.2 4.1c.2.7.7 1.3 1.4 1.5C2.8 12 8 12 8 12s5.2 0 6.4-.4c.7-.2 1.2-.8 1.4-1.5.2-1.2.2-4.1.2-4.1s0-2.9-.2-4.1zM6.4 8.5V3.5L10.6 6 6.4 8.5z"/></svg><?php echo esc_html($duration); ?></div>
+									<?php } ?>
+									<div class="yl-play-overlay"></div>
+									<div class="yl-play-overlay-fixed">
+										<div class="yl-play-icon-holder"><svg class="nvg-yt-icon" width="18" height="14" viewBox="0 0 16 12" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M15.8 1.9c-.2-.7-.7-1.3-1.4-1.5C13.2 0 8 0 8 0S2.8 0 1.6.4C.9.6.4 1.2.2 1.9 0 3.1 0 6 0 6s0 2.9.2 4.1c.2.7.7 1.3 1.4 1.5C2.8 12 8 12 8 12s5.2 0 6.4-.4c.7-.2 1.2-.8 1.4-1.5.2-1.2.2-4.1.2-4.1s0-2.9-.2-4.1zM6.4 8.5V3.5L10.6 6 6.4 8.5z"/></svg></div>
+									</div>
+								</div>
+								<br>
+								<div class="yl-view-bucket" data-views="<?php echo esc_attr($views); ?>">
+									<div class="yl-view-wrapper">
+										<div class="yl-view-count"><?php echo esc_html($views); ?> <span>views</span></div>
+									</div>
+								</div>
+							</a>
+							<div class="yl-text">
+								<div class="yl-title-description-wrapper">
+									<div class="yl-title"><?php echo esc_html($title); ?></div>
+								</div>
+								<div class="yl-separator-for-grid"></div>
+								<div class="yl-view-string"><?php echo esc_html($views); ?> <span>views</span></div>
+							</div>
+						</div>
+					</div>
+					<?php
+				}
+			}
+			$html = ob_get_clean();
+
+			wp_send_json_success(array(
+				'html' => $html,
+				'next_page_token' => $new_next_page_token
+			));
 		}
+
 	}
 
-	// Plugin Recommend
-	add_action('tgmpa_register', 'VGP_TXTDM_plugin_recommend');
-	function VGP_TXTDM_plugin_recommend()
-	{
-		$plugins = array(
-				array(
-				'name' => 'Event Management',
-				'slug' => 'event-monster',
-				'required' => false,
-			),
-				array(
-				'name' => 'Image Gallery',
-				'slug' => 'new-image-gallery',
-				'required' => false,
-			),
-				array(
-				'name' => 'Responsive Slider Gallery',
-				'slug' => 'responsive-slider-gallery',
-				'required' => false,
-			),
-		);
-		tgmpa($plugins);
+	$nvgall_gallery_object = new New_Video_Gallery();
+	$shortcode_path = NVGALL_PLUGIN_DIR . 'include/shortcode.php';
+	if ( file_exists( $shortcode_path ) ) {
+		require_once $shortcode_path;
 	}
-
-	$vg_gallery_object = new New_Video_Gallery();
-	require_once 'include/shortcode.php';
-	require_once 'class-tgm-plugin-activation.php';
 }
 ?>

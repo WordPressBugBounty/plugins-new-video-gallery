@@ -75,39 +75,39 @@ else {
 	<input type="radio" id="no_api" name="video_gallery_option" value="no_api" <?php if ($video_gallery_option == 'no_api') {
 	echo "checked='checked'";
 }?> style="display:none;">
-	<label for="no_api">
-		<div class="col-lg-6 video_gallery_genrate">
+	<div class="col-lg-6 video_gallery_genrate">
+		<label for="no_api" style="width: 100%; display: block;">
 			<div class="card no_api">
 				<div class="card-body text-center">
 					<div class="m-b-20 m-t-10">
 						<span class="dashicons dashicons-video-alt3"
-							style="width:7%; margin-top:9px; lign-height:0;"></span>
+							style="width:7%; margin-top:9px; line-height:0;"></span>
 					</div>
-					<span class="text-white display-4">
+					<span class="display-4">
 						<?php esc_html_e('Video Gallery', 'new-video-gallery'); ?>
 					</span>
 				</div>
 			</div>
-		</div>
-	</label>
+		</label>
+	</div>
 	<input type="radio" id="video_yoyube_api" name="video_gallery_option" value="video_yoyube_api" <?php if ($video_gallery_option == 'video_yoyube_api') {
 	echo "checked='checked'";
 }?> style="display:none;">
-	<label for="video_yoyube_api">
-		<div class="col-lg-6 video_gallery_genrate">
+	<div class="col-lg-6 video_gallery_genrate">
+		<label for="video_yoyube_api" style="width: 100%; display: block;">
 			<div class="card video_yoyube_api">
 				<div class="card-body text-center">
 					<div class="m-b-20 m-t-10">
 						<span class="dashicons dashicons-youtube"
-							style="width:7%; margin-top:9px; lign-height:0;"></span>
+							style="width:7%; margin-top:9px; line-height:0;"></span>
 					</div>
-					<span class="text-white display-4">
+					<span class="display-4">
 						<?php esc_html_e('YouTube API Gallery', 'new-video-gallery'); ?>
 					</span>
 				</div>
 			</div>
-		</div>
-	</label>
+		</label>
+	</div>
 </div>
 <div class="row video-gallery-content">
 	<!--Add New Image Button-->

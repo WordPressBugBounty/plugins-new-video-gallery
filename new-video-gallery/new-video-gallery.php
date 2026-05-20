@@ -3,7 +3,7 @@
  * Plugin Name:       Video Gallery – YouTube API, Vimeo & Link Gallery
  * Plugin URI:        https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/
  * Description:       Create YouTube Vimeo Video Galleries Into WordPress Blog
- * Version:           1.7.0
+ * Version:           1.7.1
  * Requires at least: 5.0
  * Requires PHP:      7.0
  * Author:            A WP Life
@@ -41,7 +41,7 @@ if (!class_exists('New_Video_Gallery')) {
 		protected function _constants()
 		{
 			// Plugin Version
-			define('NVGALL_PLUGIN_VER', '1.7.0');
+			define('NVGALL_PLUGIN_VER', '1.7.1');
 
 			// Plugin Text Domain
 			define('NVGALL_TXTDM', 'new-video-gallery');

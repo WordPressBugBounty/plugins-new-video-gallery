@@ -1,19 +1,26 @@
-=== Video Gallery YouTube Vimeo ===
+=== Video Gallery YouTube Vimeo with Youtube API ===
 Contributors: awordpresslife, razipathhan, hanif0991, muhammadshahid, fkfaisalkhan007, sharikkhan007, zishlife, FARAZFRANK
 Donate link: https://paypal.me/awplife
 Tags: video gallery, youtube gallery, vimeo gallery, video player, responsive video
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Create responsive YouTube and Vimeo video galleries with custom layouts, lightbox display, and easy shortcode embedding.
+Create a responsive video gallery easily using Youtube and Vimeo video links Or API fetch videos.
 
-== Description ==
+== Video Gallery Description for YouTube and Vimeo ==
 
-Video Gallery helps you showcase YouTube and Vimeo videos on your WordPress site in an organized, visually appealing grid format. Whether you run a business website, portfolio, blog, or entertainment site, this plugin makes it simple to create professional video galleries without any coding knowledge.
+This plugin helps you display your favorite videos on your website in a beautiful way.
+You can group all your videos inside a clean and fully responsive grid layout.
+It is very easy to use because you do not need to write code.
+The plugin also supports the YouTube API to load video details very fast.
+You can mix YouTube and Vimeo videos together inside a single responsive video gallery.
+This plugin works great for portfolios, blogs, and all types of business websites.
+It keeps your website visitors engaged by playing videos in a light popup lightbox.
+You can buy the premium version if you want more layouts and advanced features.
 
 **View Pro Demo:** **[Video Gallery Premium](https://awplife.com/demo/video-gallery-premium/)**
 **More About Pro:** **[YouTube and Vimeo Video Gallery Premium](https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/)**
@@ -27,33 +34,37 @@ https://www.youtube.com/watch?v=QmAJebgwRdg
 
 = How It Works =
 
-After installation, you get a dedicated "Video Gallery" section in your dashboard. From there, you can add videos by entering their YouTube or Vimeo IDs, upload custom thumbnail images, and organize them into galleries. Each gallery generates a unique shortcode that you can paste into any page, post, or widget area.
+Install the plugin to get a new video gallery menu inside your dashboard.
+Create a new video gallery and add your YouTube or Vimeo video links.
+The plugin will fetch details using the YouTube API  automatically.
+Each video gallery gives you a simple shortcode that you can copy easily.
+Paste this shortcode on any page or post to display the video grid.
 
 = What You Can Build =
 
-* Product demonstration galleries for e-commerce sites
-* Tutorial and course video collections
-* Music and entertainment video showcases
-* Client testimonial video walls
-* Event highlight reels
-* Portfolio presentations for creative professionals
+* Product video showcases to help sell items in your e-commerce shop.
+* Video course lists for lessons, guides, and your online school tutorials.
+* Music playlist galleries for bands, music videos, and other solo artists.
+* Customer video reviews to build trust with your new website visitors.
+* Event highlight reels to show key moments of your business meetings.
+* Portfolio grids to showcase your creative video work to your clients.
 
 = Key Capabilities =
 
-**Multiple Video Sources**
-Add videos from YouTube and Vimeo in the same gallery. The plugin handles both platforms seamlessly.
+**Flexible Video Sources**
+Mix YouTube and Vimeo videos together in a single clean grid layout.
 
-**Responsive Grid Layouts**
-Galleries adapt to different screen sizes automatically. Your visitors get a smooth viewing experience whether they browse on desktop, tablet, or mobile.
+**Fully Mobile Friendly**
+The video gallery looks great on all mobile screens and desktop computers.
 
-**Lightbox Video Playback**
-Videos open in an overlay player when clicked, keeping visitors on your page while they watch.
+**Pop Up Lightbox Player**
+Videos play in a popup so your visitors stay on your website page.
 
-**Column Flexibility**
-Choose from 1 to 4 columns per row. Adjust the layout separately for phones, tablets, laptops, and large displays.
+**Custom Grid Columns**
+Set different column numbers for mobile, tablet, laptop, and desktop screens.
 
-**Custom Thumbnails**
-Upload your own poster images instead of using auto-generated thumbnails for a more polished look.
+**Upload Custom Images**
+Use your own cover images instead of the default YouTube video thumbnails.
 
 **Simple Shortcode System**
 Copy and paste shortcodes like `[VDGAL id=123]` to display galleries anywhere on your site.
@@ -77,18 +88,18 @@ Copy and paste shortcodes like `[VDGAL id=123]` to display galleries anywhere on
 
 Upgrade to [Video Gallery Pro](https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/) for additional capabilities:
 
-* YouTube API integration - With many customizations
-* Vimeo API integration - import videos automatically
-* YouTube Playlist import by ID
-* Multiple playlist support
-* Masonry gallery layout
-* Gallery load more button
-* Local video file upload and playback
-* Advanced lightbox customization (colors, opacity, animations)
-* Glow and fade effects
-* Z-index controls for theme compatibility
-* Full-screen video option
-* Premium support
+* Enjoy advanced YouTube API options with full responsive gallery layout controls.
+* Import your videos automatically using the Vimeo API integration setting options.
+* Load entire YouTube playlists by entering a simple playlist ID value.
+* Support for displaying multiple video playlists in a tabbed layout screen.
+* Show your videos using a beautiful masonry style gallery layout view.
+* Add an AJAX load more button to load more videos easily.
+* Upload and play your own local video files from the dashboard.
+* Customize lightbox styles by changing your theme colors and popup effects.
+* Add cool hover fade and glow effects to gallery cards dynamically.
+* Custom z-index values to prevent conflicts with your sticky theme headers.
+* Get fast and friendly help from our premium customer support team.
+
 
 = Must See Our Demo =
 
@@ -111,73 +122,76 @@ Upgrade to [Video Gallery Pro](https://awplife.com/wordpress-plugins/video-galle
 
 == External Services ==
 
-This plugin utilizes third-party external services to display video content and retrieve video metadata:
+This plugin uses external services to load video content and get details.
 
 1. YouTube Data API (Google Inc.)
-* What the service is and what it is used for: Used to load playlist details, channel details, video descriptions, titles, durations, and pagination tokens for dynamic YouTube video galleries.
-* What data is sent and when: Requests are made to `https://www.googleapis.com/` using the user's YouTube API Key, channel ID, or playlist ID. No user-identifying or visitor personal data is transmitted.
+* We use the YouTube API to fetch video titles, descriptions, and durations.
+* No personal user data is sent to the Google API server locations.
 * Terms of Service: [YouTube Terms of Service](https://www.youtube.com/t/terms)
 * Privacy Policy: [Google Privacy Policy](https://policies.google.com/privacy)
 
 2. YouTube Image Services (Google Inc.)
-* What the service is and what it is used for: Used to fetch and display thumbnail images (`hqdefault.jpg`) for YouTube videos in the gallery.
-* What data is sent and when: Image source URLs point to `https://img.youtube.com/`. No user-identifying data is transmitted.
+* This service fetches thumbnail images from YouTube to display in your gallery.
+* No visitor personal details are sent when loading these YouTube thumbnail images.
 * Terms of Service: [YouTube Terms of Service](https://www.youtube.com/t/terms)
 * Privacy Policy: [Google Privacy Policy](https://policies.google.com/privacy)
 
 3. Vimeo (Vimeo.com, Inc.)
-* What the service is and what it is used for: Used to play Vimeo videos in the lightbox popup.
-* What data is sent and when: Video playback requests are directed to `https://player.vimeo.com/`. Standard browser referral headers are sent.
+* The Vimeo API and player are used to play Vimeo videos.
+* Standard browser referral headers are shared when visitors play these Vimeo videos.
 * Terms of Service: [Vimeo Terms of Service](https://vimeo.com/terms)
 * Privacy Policy: [Vimeo Privacy Policy](https://vimeo.com/privacy)
 
-== Installation ==
+== YouTube and Vimeo Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/new-video-gallery/` directory, or install through the WordPress plugins screen.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Navigate to "Video Gallery" in your WordPress dashboard.
-4. Click "Add Video Gallery" to create your first gallery.
-5. Add videos by uploading thumbnails and entering YouTube/Vimeo video IDs.
-6. Save the gallery and copy the generated shortcode.
-7. Paste the shortcode into any page, post, or widget to display your gallery.
+1. Upload the plugin folder directly to your WordPress plugins directory.
+2. Activate the plugin using the plugins menu in your dashboard.
+3. Open the Video Gallery section in your WordPress admin dashboard.
+4. Click the Add Video Gallery button to start building a grid.
+5. Add your videos by entering YouTube or Vimeo ID values manually.
+6. Save your new gallery and copy the generated shortcode code.
+7. Paste the shortcode on any page to show your video gallery.
 
-== Frequently Asked Questions ==
+== Frequently Asked Questions about YouTube and Vimeo Galleries ==
 
-= How many videos can I add to a single gallery? =
-There is no fixed limit. You can add as many videos as needed for your gallery.
+= How many videos can I add to a single YouTube video gallery? =
+There is no limit to the number of videos in your gallery.
 
-= Can I use both YouTube and Vimeo videos in the same gallery? =
-Yes, the plugin supports mixed galleries where you can combine videos from both YouTube and Vimeo.
+= Can I mix YouTube and Vimeo videos in the same video gallery? =
+Yes, you can add both video types in one responsive video gallery.
 
-= Is the gallery mobile responsive? =
-Yes, galleries automatically adjust their layout based on screen size. You can also set different column counts for phones, tablets, and desktops.
+= Is this YouTube and Vimeo video gallery fully responsive on mobile? =
+Yes, the gallery layout changes size to look clean on all screens.
 
-= Does the video play in a popup or on the same page? =
-Videos play in a lightbox popup overlay by default, allowing visitors to watch without leaving your page.
+= Does a YouTube or Vimeo video play in a popup lightbox? =
+Yes, visitors watch videos in a popup player without leaving your page.
 
-= Can I add custom thumbnails for videos? =
-Yes, you can upload your own poster images for each video instead of using the default thumbnails.
+= Can I use custom cover images for my YouTube or Vimeo videos? =
+Yes, you can upload custom images to replace the default video thumbnails.
 
-= How do I display a gallery on my website? =
-Copy the shortcode shown in the gallery editor (e.g., `[VDGAL id=123]`) and paste it into any page, post, or text widget.
+= How do I display a responsive video gallery on my website? =
+Copy the shortcode from the editor and paste it onto any page.
 
-= Can I add titles and descriptions to videos? =
-Yes, each video has fields for a custom title and description that display in the gallery.
+= Can you load titles and descriptions automatically using the Youtube API? =
+Yes, the Youtube API fetches video titles and descriptions for your grid.
 
-= Does it work with page builders like Elementor or Divi? =
-Yes, you can use the shortcode in any page builder that supports shortcode widgets or blocks.
+= Does this plugin support the Vimeo API in the free version? =
+The free version has basic options. Buy the pro version for full Vimeo API support.
 
-= How do I get a YouTube API key for the Pro version? =
-In the Pro version, you can generate an API key through the Google Cloud Console. Documentation is provided with the premium plugin.
+= Does this plugin work with page builders like Elementor or Divi? =
+Yes, you can paste the shortcode block inside any page builder.
 
-= Can I have multiple galleries on the same page? =
-Yes, you can add multiple gallery shortcodes on a single page, each displaying a different video collection.
+= How do I get a YouTube API key for this plugin? =
+You can get a free key from the Google Cloud Console dashboard.
 
-= Is the plugin translation-ready? =
-Yes, the plugin is fully translatable and works with standard WordPress translation methods.
+= Can I display multiple YouTube and Vimeo galleries on one page? =
+Yes, you can place as many shortcodes as you want on a page.
 
-= Where can I get support if I have issues? =
-For the free version, please use the WordPress.org support forum. Pro users receive dedicated support through the developer website.
+= Is this YouTube and Vimeo video gallery plugin ready for translation? =
+Yes, you can translate this plugin into your own language easily.
+
+= Where can I get help if my video gallery is not working? =
+Free users can post their questions on the WordPress.org support forum.
 
 == Screenshots ==
 
@@ -190,6 +204,11 @@ For the free version, please use the WordPress.org support forum. Pro users rece
 7. Video Gallery Admin Settings Panel
 
 == Changelog ==
+
+= 1.7.1 =
+* Date: 20-may-2026
+* Fix: Restructured settings page layout so option toggle cards display correctly on all devices.
+* Fix: Set unselected option card text to inherit color so it is visible against white.
 
 = 1.7.0 =
 * Date: 19-may-2026
@@ -247,6 +266,9 @@ For the free version, please use the WordPress.org support forum. Pro users rece
 * Tested with WordPress 6.7.2
 
 == Upgrade Notice ==
+
+= 1.7.1 =
+This release fixes layout and color settings issues on the admin screen. This upgrade is highly recommended for all users of the plugin.
 
 = 1.7.0 =
 Major security and performance upgrade. Server-side YouTube API fetching with transients caching protects credentials and makes pages load instantly. Highly recommended for all users.

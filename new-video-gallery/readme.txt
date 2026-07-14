@@ -3,7 +3,7 @@ Contributors: awordpresslife, razipathhan, hanif0991, muhammadshahid, fkfaisalkh
 Donate link: https://paypal.me/awplife
 Tags: video gallery, youtube gallery, vimeo gallery, video player, responsive video
 Requires at least: 5.0
-Tested up to: 6.9
+Tested up to: 7.0
 Stable tag: 1.7.1
 Requires PHP: 7.0
 License: GPLv2 or later

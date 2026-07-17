@@ -12,7 +12,7 @@
 
     registerBlockType('new-video-gallery/video-gallery-block', {
         apiVersion: 3,
-        title: 'Video Gallery Premium',
+        title: 'Video Gallery',
         description: 'Display an individual video gallery.',
         icon: 'video-alt3',
         category: 'widgets',
@@ -74,7 +74,7 @@
                     }
                 },
                     el('span', { className: 'dashicons dashicons-video-alt3', style: { fontSize: '36px', width: '36px', height: '36px', marginBottom: '12px', color: '#6ee7b7', display: 'block' } }),
-                    el('h4', { style: { margin: '0 0 10px 0', fontSize: '16px', fontWeight: '700', color: '#ffffff' } }, 'Video Gallery Premium Block'),
+                    el('h4', { style: { margin: '0 0 10px 0', fontSize: '16px', fontWeight: '700', color: '#ffffff' } }, 'Video Gallery Block'),
                     el('p', { style: { margin: '0 0 16px 0', opacity: 0.85, fontSize: '13px', color: '#a7f3d0' } }, 
                         'Select a gallery to display.'
                     ),

@@ -36,7 +36,7 @@ function awl_video_gallery_register_elementor_widget($widgets_manager) {
             }
 
             public function get_title() {
-                return esc_html__('Video Gallery Premium', 'new-video-gallery');
+                return esc_html__('Video Gallery', 'new-video-gallery');
             }
 
             public function get_icon() {

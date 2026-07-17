@@ -33,10 +33,6 @@ if (!function_exists('is_vg_serialized')) {
 
 
 
-$v_gallery_load_more = "yes";
-$vg_limit = 3;
-
-
 $all_galleries = array('p' => $video_gallery_id, 'post_type' => 'video_gallery', 'orderby' => 'ASC');
 $loop = new WP_Query($all_galleries);
 
@@ -263,7 +259,10 @@ while ($loop->have_posts()):
 	else
 		$video_icon = "true";
 	$show_video_platform_tag = 'false';
-	$gallery_ad_script = isset($gallery_settings['gallery_ad_script']) ? $gallery_settings['gallery_ad_script'] : '';
+	$gallery_ad_script = isset($gallery_settings['gallery_ad_script']) ? $gallery_settings['gallery_ad_script'] : '<div style="background: #3b82f6; color: white; padding: 30px; text-align: center; font-weight: bold; border-radius: 8px; font-size: 18px; margin: 15px 0; width: 100%;">
+    🎉 IN-GRID ADVERTISEMENT SLOT (WORKING!)
+</div>';
+	$show_ad = isset($gallery_settings['show_ad']) ? $gallery_settings['show_ad'] : (!empty($gallery_ad_script) ? 'yes' : 'no');
 	$isotope_layout_mode = 'fitRows';
 
 	$thumb_spacing = isset($gallery_settings['thumb_spacing']) ? intval($gallery_settings['thumb_spacing']) : 8;
@@ -325,6 +324,20 @@ while ($loop->have_posts()):
 	$style_data .= "	--vg-card-radius: " . esc_attr($thumb_border_radius) . "px;\n";
 	$style_data .= "}\n";
 
+	// Play Overlay Behavior CSS rules
+	$style_data .= "#image_gallery_" . esc_attr($video_gallery_id) . " .vg-card__overlay, .youram-simple_" . esc_attr($post_id) . " .vg-card__overlay {\n";
+	if ($thumb_icon_tag_display === 'always') {
+		$style_data .= "	opacity: 1 !important;\n";
+	} else {
+		$style_data .= "	opacity: 0 !important;\n";
+	}
+	$style_data .= "}\n";
+	if ($thumb_icon_tag_display === 'hover') {
+		$style_data .= "#image_gallery_" . esc_attr($video_gallery_id) . " .vg-card:hover .vg-card__overlay, .youram-simple_" . esc_attr($post_id) . " .vg-card:hover .vg-card__overlay {\n";
+		$style_data .= "	opacity: 1 !important;\n";
+		$style_data .= "}\n";
+	}
+
 	// Check if inside editor preview context (Gutenberg or Elementor)
 	$is_preview_style = false;
 	if ( is_admin() ) {
@@ -362,9 +375,10 @@ while ($loop->have_posts()):
 		echo '<strong>Twitch Embed Notice (Admins Only):</strong> Twitch requires secure HTTPS contexts for all custom domain embeds (e.g. <code>free.local</code>). Please enable SSL in Local WP by clicking <strong>Trust</strong> in the SSL tab, then access your site via <strong>https://' . esc_html($_SERVER['HTTP_HOST']) . '</strong>.';
 		echo '</div>';
 	}
+
 ?>
 		<?php if ($v_gallery_load_more == "no") { ?>
-			<div id="image_gallery_<?php echo esc_attr($video_gallery_id); ?>" class="vg-row all-images <?php echo ($gallery_layout_mode === 'fixed') ? 'vg-layout-fixed' : ''; ?>" style="--vg-cols-lg: <?php echo esc_attr($cols_lg); ?>; --vg-cols-md: <?php echo esc_attr($cols_md); ?>; --vg-cols-sm: <?php echo esc_attr($cols_sm); ?>; --vg-cols-xs: <?php echo esc_attr($cols_xs); ?>;" version="<?php echo esc_attr(VG_PLUGIN_VER); ?>" data-lg-config='<?php echo esc_attr(wp_json_encode(array(
+			<div id="image_gallery_<?php echo esc_attr($video_gallery_id); ?>" class="vg-row all-images vg-layout-fixed" style="--vg-cols-lg: <?php echo esc_attr($cols_lg); ?>; --vg-cols-md: <?php echo esc_attr($cols_md); ?>; --vg-cols-sm: <?php echo esc_attr($cols_sm); ?>; --vg-cols-xs: <?php echo esc_attr($cols_xs); ?>;" version="<?php echo esc_attr(VG_PLUGIN_VER); ?>" data-lg-config='<?php echo esc_attr(wp_json_encode(array(
 				"loop" => ($show_lightbox_loop === 1),
 				"thumbnail" => ($show_lightbox_thumbnails === 1),
 				"autoplay" => ($auto_play === "true"),
@@ -374,7 +388,9 @@ while ($loop->have_posts()):
 				<?php
 			if (isset($gallery_settings['slide-ids']) && is_array($gallery_settings['slide-ids']) && count($gallery_settings['slide-ids']) > 0) {
 				$count = 0;
-				$ad_after_index = floor(count($gallery_settings['slide-ids']) / 2);
+				$ad_after_index = intval(floor(count($gallery_settings['slide-ids']) / 2));
+				$original_ids = $gallery_settings['slide-ids'];
+				echo '<!-- DEBUG VG ADS info: show_ad = ' . esc_attr($show_ad) . ', script_empty = ' . (empty($gallery_ad_script) ? 'yes' : 'no') . ', ad_after_index = ' . intval($ad_after_index) . ', count = ' . count($gallery_settings['slide-ids']) . ' -->';
 				if ($thumbnail_order == "DESC") {
 					$gallery_settings['slide-ids'] = array_reverse($gallery_settings['slide-ids']);
 				}
@@ -382,6 +398,7 @@ while ($loop->have_posts()):
 					shuffle($gallery_settings['slide-ids']);
 				}
 				foreach ($gallery_settings['slide-ids'] as $attachment_id) {
+					echo '<!-- LOOP ITERATION: count = ' . $count . ', attachment_id = ' . $attachment_id . ' -->';
 					$attachment_details = get_post($attachment_id);
 					if (!$attachment_details) {
 						$count++;
@@ -391,8 +408,8 @@ while ($loop->have_posts()):
 					if ($orig_key === false) {
 						$orig_key = $count;
 					}
-					$title = $attachment_details->post_title;
-					$description = $attachment_details->post_content;
+					$title = isset($gallery_settings['slide-title'][$orig_key]) && !empty($gallery_settings['slide-title'][$orig_key]) ? $gallery_settings['slide-title'][$orig_key] : $attachment_details->post_title;
+					$description = isset($gallery_settings['slide-desc'][$orig_key]) && !empty($gallery_settings['slide-desc'][$orig_key]) ? $gallery_settings['slide-desc'][$orig_key] : $attachment_details->post_content;
 					$video_type = isset($gallery_settings['slide-type'][$orig_key]) ? $gallery_settings['slide-type'][$orig_key] : '';
 					$video_id = isset($gallery_settings['slide-link'][$orig_key]) ? $gallery_settings['slide-link'][$orig_key] : '';
 					if ($video_type == 'y') {
@@ -402,7 +419,12 @@ while ($loop->have_posts()):
 					}
 					$poster_type = isset($gallery_settings['poster-type'][$orig_key]) ? $gallery_settings['poster-type'][$orig_key] : '';
 
-					if ($count === $ad_after_index && !empty($gallery_ad_script)) {
+					$should_show_ad = false;
+					if ($show_ad === 'yes') {
+						$should_show_ad = ($count === $ad_after_index);
+					}
+
+					if ($should_show_ad && !empty($gallery_ad_script)) {
 						echo '<div class="vg-col ' . esc_attr("$col_large_desktops $col_desktops $col_tablets $col_phones") . ' vg-ad-container">' . $gallery_ad_script . '</div>';
 					}
 					vg_render_manual_card(array(
@@ -445,149 +467,6 @@ while ($loop->have_posts()):
 			</div>
 		<?php
 		}
-		else if ($v_gallery_load_more == "yes") { ?>
-			<div id="image_gallery_<?php echo esc_attr($video_gallery_id); ?>" class="vg-row all-images <?php echo ($gallery_layout_mode === 'fixed') ? 'vg-layout-fixed' : ''; ?>" style="--vg-cols-lg: <?php echo esc_attr($cols_lg); ?>; --vg-cols-md: <?php echo esc_attr($cols_md); ?>; --vg-cols-sm: <?php echo esc_attr($cols_sm); ?>; --vg-cols-xs: <?php echo esc_attr($cols_xs); ?>;" data-lg-config='<?php echo esc_attr(wp_json_encode(array(
-				"loop" => ($show_lightbox_loop === 1),
-				"thumbnail" => ($show_lightbox_thumbnails === 1),
-				"autoplay" => ($auto_play === "true"),
-				"mode" => esc_attr($lightbox_lightgallery_transition)
-			))); ?>'>
-				<div class="grid-sizer"></div>
-				<?php
-			if (isset($gallery_settings['slide-ids']) && is_array($gallery_settings['slide-ids']) && count($gallery_settings['slide-ids']) > 0) {
-				$count = 0;
-				$ad_after_index = floor(min(count($gallery_settings['slide-ids']), $vg_limit) / 2);
-				if ($thumbnail_order == "DESC") {
-					$gallery_settings['slide-ids'] = array_reverse($gallery_settings['slide-ids']);
-				}
-				if ($thumbnail_order == "RANDOM") {
-					shuffle($gallery_settings['slide-ids']);
-				}
-				for ($i = 0; $i < $vg_limit; $i++) {
-					if (!isset($gallery_settings['slide-ids'][$i])) {
-						break;
-					}
-					$attachment_id = $gallery_settings['slide-ids'][$i];
-					$attachment_details = get_post($attachment_id);
-					if (!$attachment_details) {
-						$count++;
-						continue;
-					}
-					$orig_key = array_search($attachment_id, $original_ids);
-					if ($orig_key === false) {
-						$orig_key = $count;
-					}
-					$title = $attachment_details->post_title;
-					$description = $attachment_details->post_content;
-					$video_type = isset($gallery_settings['slide-type'][$orig_key]) ? $gallery_settings['slide-type'][$orig_key] : '';
-					$video_id = isset($gallery_settings['slide-link'][$orig_key]) ? $gallery_settings['slide-link'][$orig_key] : '';
-					if ($video_type == 'y') {
-						$video_id = vg_extract_youtube_id($video_id);
-					} elseif ($video_type == 'v') {
-						$video_id = vg_extract_vimeo_id($video_id);
-					}
-					$poster_type = isset($gallery_settings['poster-type'][$orig_key]) ? $gallery_settings['poster-type'][$orig_key] : '';
-
-					if ($count === $ad_after_index && !empty($gallery_ad_script)) {
-						echo '<div class="vg-col ' . esc_attr("$col_large_desktops $col_desktops $col_tablets $col_phones") . ' vg-ad-container">' . $gallery_ad_script . '</div>';
-					}
-					vg_render_manual_card(array(
-						'attachment_id'       => $attachment_id,
-						'video_type'          => $video_type,
-						'video_id'            => $video_id,
-						'poster_type'         => $poster_type,
-						'title'               => $title,
-						'description'         => $description,
-						'gallery_settings'    => $gallery_settings,
-						'post_id'             => $post_id,
-						'video_gallery_id'    => $video_gallery_id,
-						'gal_thumb_size'      => $gal_thumb_size,
-						'video_title'         => $video_title,
-						'video_desc'          => $video_desc,
-						'video_icon'          => $video_icon,
-						'show_video_platform_tag' => $show_video_platform_tag,
-						'thumb_title_hover_mode' => $thumb_title_hover_mode,
-						'thumb_border'        => $thumb_border,
-						'image_grayscale'     => $image_grayscale,
-						'show_lightbox_title' => $show_lightbox_title,
-						'show_lightbox_desc'  => $show_lightbox_desc,
-						'lazy_loading'        => $lazy_loading,
-						'col_classes'         => "$col_large_desktops $col_desktops $col_tablets $col_phones",
-					));
-
-					$count++;
-				} // end of attachment foreach
-			}
-			else {
-				esc_html_e('Sorry! No video gallery found ', 'new-video-gallery');
-				echo ": [VDGAL id=" . esc_attr($post_id) . "]";
-			} // end of if esle of slides avaialble check into slider
-
-			$vg_limit_start = $vg_limit;
-			$vg_limit_end = $vg_limit_start + $vg_limit; ?>
-			</div>
-			<div class="vg-load-more-container text-center">
-				<input type="hidden" id="vg_limit_start_<?php echo esc_attr($video_gallery_id); ?>" name="vg_limit_start_<?php echo esc_attr($video_gallery_id); ?>" value="<?php echo esc_attr($vg_limit); ?>" />
-				<input type="hidden" id="vg_limit_end_<?php echo esc_attr($video_gallery_id); ?>" name="vg_limit_end_<?php echo esc_attr($video_gallery_id); ?>" value="<?php echo esc_attr($vg_limit_end); ?>" />
-				<input type="hidden" id="vg_total_images_<?php echo esc_attr($video_gallery_id); ?>" name="vg_total_images_<?php echo esc_attr($video_gallery_id); ?>" value="<?php echo esc_attr($vg_total_images); ?>" />
-				<?php if ($vg_total_images <= $vg_limit) { ?>
-					<button class="btn vg-load-more-btn <?php echo esc_attr($load_btn_style); ?> vg_load_more_<?php echo esc_attr($video_gallery_id); ?>" disabled style="cursor: default; opacity: 0.6;"><?php echo esc_html($no_images_text); ?></button>
-				<?php } else { ?>
-					<button class="btn vg-load-more-btn <?php echo esc_attr($load_btn_style); ?> vg_load_more_<?php echo esc_attr($video_gallery_id); ?>" onclick="VgLoadMore_<?php echo esc_attr($video_gallery_id); ?>();"><?php echo esc_html($load_text); ?></button>
-				<?php } ?>
-			</div>
-			<?php
-			if (isset($_POST['vg_security'])) {
-				$vg_security = $_POST['vg_security'];
-				if (wp_verify_nonce($vg_security, 'vg_load_more_nonce')) {
-					$vg_start = $_POST['vg_limit_start'];
-					$vg_end = $_POST['vg_limit_end'];
-					for ($i = $vg_start; $i < $vg_end; $i++) {
-						if (isset($gallery_settings['slide-ids'][$i])) {
-
-							$attachment_id = $gallery_settings['slide-ids'][$i];
-							$attachment_details = get_post($attachment_id);
-							if (!$attachment_details) continue;
-							$title = $attachment_details->post_title;
-							$description = $attachment_details->post_content;
-							$video_type = isset($gallery_settings['slide-type'][$i]) ? $gallery_settings['slide-type'][$i] : '';
-							$video_id = isset($gallery_settings['slide-link'][$i]) ? $gallery_settings['slide-link'][$i] : '';
-							if ($video_type == 'y') {
-								$video_id = vg_extract_youtube_id($video_id);
-							} elseif ($video_type == 'v') {
-								$video_id = vg_extract_vimeo_id($video_id);
-							}
-							$poster_type = isset($gallery_settings['poster-type'][$i]) ? $gallery_settings['poster-type'][$i] : '';
-
-
-							vg_render_manual_card(array(
-								'attachment_id'       => $attachment_id,
-								'video_type'          => $video_type,
-								'video_id'            => $video_id,
-								'poster_type'         => $poster_type,
-								'title'               => $title,
-								'description'         => $description,
-								'gallery_settings'    => $gallery_settings,
-								'post_id'             => $post_id,
-								'video_gallery_id'    => $video_gallery_id,
-								'gal_thumb_size'      => $gal_thumb_size,
-								'video_title'         => $video_title,
-								'video_desc'          => $video_desc,
-								'video_icon'          => $video_icon,
-								'show_video_platform_tag' => $show_video_platform_tag,
-								'thumb_title_hover_mode' => $thumb_title_hover_mode,
-								'thumb_border'        => $thumb_border,
-								'image_grayscale'     => $image_grayscale,
-								'show_lightbox_title' => $show_lightbox_title,
-								'show_lightbox_desc'  => $show_lightbox_desc,
-								'lazy_loading'        => $lazy_loading,
-								'col_classes'         => "$col_large_desktops $col_desktops $col_tablets $col_phones",
-							));
-						}
-					}
-				}
-			}
-		}
 	}
 	if ($video_gallery_option == 'video_yoyube_api') {
 		require( VG_PLUGIN_DIR . 'api-templates/youtube-api-gallery.php' );
@@ -610,90 +489,8 @@ while ($loop->have_posts()):
 endwhile;
 wp_reset_postdata();
 
-?>
-<?php
 ob_start();
 ?>
-<?php
-if ($v_gallery_load_more == "yes") { ?>
-	function VgLoadMore_<?php echo esc_js($video_gallery_id); ?>() {
-		var $grid = jQuery('#image_gallery_<?php echo esc_js($video_gallery_id); ?>');
-		
-		jQuery(".vg_load_more_<?php echo esc_js($video_gallery_id); ?>")
-			.html('<span class="vg-btn-spinner"></span>')
-			.prop('disabled', true)
-			.css({'opacity': '0.8', 'cursor': 'default'});
-		var vg_limit_start = parseInt(jQuery("#vg_limit_start_<?php echo esc_js($video_gallery_id); ?>").val());
-		var vg_limit_end = parseInt(jQuery("#vg_limit_end_<?php echo esc_js($video_gallery_id); ?>").val());
-		var vg_total_images = parseInt(jQuery("#vg_total_images_<?php echo esc_js($video_gallery_id); ?>").val());
-		
-		if(vg_total_images > vg_limit_start){
-			jQuery.ajax({
-				dataType : 'html',
-				type: 'POST',
-				url : '<?php echo esc_url(admin_url("admin-ajax.php")); ?>',
-				cache: false,
-				data : {
-					action: 'nvgall_load_more_local',
-					security: '<?php echo esc_js(wp_create_nonce("vg_load_more_nonce")); ?>',
-					post_id: <?php echo esc_js($video_gallery_id); ?>,
-					vg_limit_start: vg_limit_start,
-					vg_limit_end: vg_limit_end
-				},
-				complete : function() {},
-				success: function(response) {
-					var $items = jQuery('<div>' + response + '</div>').find('.single-image');
-					if ($items.length > 0) {
-						$grid.append($items);
-						if (typeof jQuery.fn.isotope !== 'undefined') {
-							if (typeof jQuery.fn.imagesLoaded !== 'undefined') {
-								$grid.imagesLoaded(function() {
-									$grid.isotope('appended', $items);
-									$grid.isotope('layout');
-								});
-							} else {
-								$grid.isotope('appended', $items);
-								$grid.isotope('layout');
-							}
-						}
-					}
-					if (typeof jQuery.fn.isotope !== 'undefined') {
-						$grid.isotope('layout');
-					}
-					
-					var new_start_limit = vg_limit_end;
-					var new_end_limit = parseInt(vg_limit_end) +  parseInt(<?php echo esc_js($vg_limit); ?>);
-					jQuery("#vg_limit_start_<?php echo esc_js($video_gallery_id); ?>").val(new_start_limit);
-					jQuery("#vg_limit_end_<?php echo esc_js($video_gallery_id); ?>").val(new_end_limit);
-
-					if (new_start_limit >= vg_total_images) {
-						jQuery(".vg_load_more_<?php echo esc_js($video_gallery_id); ?>")
-							.html("<?php echo esc_js($no_images_text); ?>")
-							.prop('disabled', true)
-							.css({'opacity': '0.6', 'cursor': 'default'});
-					} else {
-						jQuery(".vg_load_more_<?php echo esc_js($video_gallery_id); ?>")
-							.html("<?php echo esc_js($load_text); ?>")
-							.prop('disabled', false)
-							.css({'opacity': '', 'cursor': ''});
-					}
-				},
-				error: function() {
-					jQuery(".vg_load_more_<?php echo esc_js($video_gallery_id); ?>")
-						.html("<?php echo esc_js($load_text); ?>")
-						.prop('disabled', false)
-						.css({'opacity': '', 'cursor': ''});
-				}
-			});
-		} else {
-			jQuery(".vg_load_more_<?php echo esc_js($video_gallery_id); ?>")
-				.html("<?php echo esc_js($no_images_text); ?>")
-				.prop('disabled', true)
-				.css({'opacity': '0.6', 'cursor': 'default'});
-		}
-	} <?php
-}?>
-
 jQuery(document).ready(function () {
 	var $grid = jQuery('#image_gallery_<?php echo esc_js($video_gallery_id); ?>, .youram-simple_<?php echo esc_js($video_gallery_id); ?>, #nev_vimeo_api_<?php echo esc_js($video_gallery_id); ?>, #nev_twitch_api_<?php echo esc_js($video_gallery_id); ?>, #nev_dm_api_<?php echo esc_js($video_gallery_id); ?>, #nev_wis_api_<?php echo esc_js($video_gallery_id); ?>');
 	var $loader = jQuery('#vg-loader-<?php echo esc_js($video_gallery_id); ?>');

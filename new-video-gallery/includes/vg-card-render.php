@@ -172,7 +172,7 @@ function vg_render_manual_card($args) {
 			<div class="vg-card__media">
 				<a class="<?php echo $is_lightbox ? 'vgp-trigger' : ''; ?>" href="<?php echo esc_url($lightbox_href); ?>" <?php if (!empty($data_html)) { echo 'data-html="' . $data_html . '"'; } ?> data-thumb="<?php echo esc_url($lightbox_thumb_url); ?>" data-sub-html="<?php echo esc_attr($sub_html); ?>" <?php if (!$is_lightbox) { echo 'target="_blank"'; } ?>>
 					<img class="vg-card__img <?php echo ($image_grayscale == 1) ? 'vg-grayscale' : ''; ?>" <?php echo ($lazy_loading === 'yes') ? 'loading="lazy"' : ''; ?> src="<?php echo esc_url($thumbnail_url); ?>" alt="<?php echo esc_html($title); ?>">
-					<?php if ($video_icon != "hide") { ?>
+					<?php if ($video_icon !== 'false' && $video_icon !== 'hide') { ?>
 						<div class="vg-card__overlay">
 							<button class="vg-card__play video_icon_<?php echo esc_attr($post_id); ?>" aria-label="<?php echo ($video_type === 'image') ? 'View Image' : 'Play video'; ?>">
 								<?php if ($video_type === 'image') { ?>

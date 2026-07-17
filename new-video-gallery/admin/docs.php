@@ -336,7 +336,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 <p><?php esc_html_e('Add your galleries within Elementor layouts:', 'new-video-gallery'); ?></p>
                 <ol class="vgp-bullet-list" style="list-style-type: decimal; padding-left: 20px;">
                     <li><?php esc_html_e('Edit any page or template with the Elementor Editor.', 'new-video-gallery'); ?></li>
-                    <li><?php esc_html_e('In the left widgets search bar, search for **Video Gallery Premium**.', 'new-video-gallery'); ?></li>
+                    <li><?php esc_html_e('In the left widgets search bar, search for **Video Gallery**.', 'new-video-gallery'); ?></li>
                     <li><?php esc_html_e('Drag the widget block and place it into any grid column on the layout canvas.', 'new-video-gallery'); ?></li>
                     <li><?php esc_html_e('Under the **Gallery Source Settings** section on the left content panel, select your custom gallery in the dropdown.', 'new-video-gallery'); ?></li>
                     <li><?php esc_html_e('The gallery will immediately render and initialize the scripts and lightgallery popup players.', 'new-video-gallery'); ?></li>

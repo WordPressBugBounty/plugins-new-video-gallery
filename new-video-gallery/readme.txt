@@ -1,38 +1,28 @@
 === Video Gallery - YouTube, Vimeo Gallery & YouTube API ===
 Contributors: awordpresslife, razipathhan, hanif0991, muhammadshahid, fkfaisalkhan007, sharikkhan007, zishlife, FARAZFRANK
 Donate link: https://paypal.me/awplife
-Tags: video gallery, youtube gallery, vimeo gallery, video player, responsive video
+Tags: video gallery, youtube gallery, vimeo gallery, video player, responsive lightbox
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 2.0.0
+Stable tag: 2.0.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Create beautiful responsive YouTube and Vimeo video galleries. Features YouTube API integration, lightbox popup player, and grid layouts.
+Create video portfolio with YouTube and Vimeo video galleries. Features YouTube API integration, lightbox popup player, and grid layouts.
 
-== Video Gallery Description for YouTube and Vimeo ==
+== Description ==
 
-Video Gallery is a responsive WordPress plugin designed to display YouTube and Vimeo videos on your website. Whether you need a video portfolio, a YouTube playlist showcase, product video highlights, or an event gallery, this plugin provides a clean and modern responsive grid layout.
-
-You can mix YouTube and Vimeo videos together inside a single gallery without writing any code. The plugin features built-in integration with the YouTube Data API to fetch titles, descriptions, and thumbnails automatically, saving you time and effort. It is fully compatible with page builders, featuring a dedicated Gutenberg block and an Elementor widget.
+Video Gallery is a responsive WordPress plugin designed to display YouTube and Vimeo videos on your website. You can mix YouTube and Vimeo videos together inside a single gallery. The plugin features built-in integration with the YouTube Data API to fetch titles, descriptions, and thumbnails automatically, saving you time and effort. It is fully compatible with page builders, featuring a dedicated Gutenberg block and an Elementor widget.
 
 With built-in playback analytics, you can track which videos are popular, monitor platform shares (YouTube vs. Vimeo), and export play logs directly from your dashboard.
 
-View Pro Demo: https://awplife.com/demo/video-gallery-premium/
-More About Pro: https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/
-Buy Premium: https://awplife.com/account/signup/video-gallery-premium
+[Video Gallery Pro Demo](ttps://awplife.com/demo/video-gallery-premium/)
+[More About Pro](https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/)
+[Buy Video Gallery Pro](https://awplife.com/account/signup/video-gallery-premium)
 
-= How It Works =
+= Video Tutorial =
 https://www.youtube.com/watch?v=44OBOSBd73M
-
-= How It Works =
-
-1. Install the plugin to add a Video Gallery menu to your WordPress admin panel.
-2. Create a new gallery and add your YouTube or Vimeo video URLs.
-3. The plugin will fetch metadata automatically via the YouTube API.
-4. Copy the generated shortcode (example: [VDGAL id="123"]).
-5. Paste the shortcode into any post, page, or widget to display the responsive video grid.
 
 = Common Use Cases =
 
@@ -58,9 +48,9 @@ https://www.youtube.com/watch?v=44OBOSBd73M
 * Fully responsive grid layouts.
 * Adjustable column counts (1, 2, 3, or 4 columns).
 * Server-side YouTube API integration for automatic title, description, and thumbnail fetching.
-* Responsive Lightgallery engine for popup video playback.
-* Custom video thumbnail uploads.
-* Video title and description editor fields.
+* Responsive Lightgallery engine for popup player.
+* Custom poster thumbnail uploads.
+* Title and description editor fields.
 * Gutenberg block integration.
 * Elementor widget integration.
 * Built-in playback analytics with graph charts and CSV export logs.
@@ -83,13 +73,15 @@ Upgrade to Video Gallery Pro for advanced controls and features:
 
 = Must See Our Demo =
 
-> * [YouTube Gallery](https://awplife.com/demo/video-gallery-premium/ "YouTube Gallery")
-> * [Vimeo Gallery](https://awplife.com/demo/video-gallery-premium/vimeo-gallery/ "Vimeo Gallery")
-> * [YouTube Playlist ID](https://awplife.com/demo/video-gallery-premium/youtube-playlist/ "Youtube Playlist ID")
-> * [Mix Gallery](https://awplife.com/demo/video-gallery-premium/mix-gallery/ "Mix Gallery")
-> * [Sports Videos](https://awplife.com/demo/video-gallery-premium/sports-videos/ "Sports Videos")
-> * [Dance Videos](https://awplife.com/demo/video-gallery-premium/dance-videos/ "Dance Video")
-> * [Funny Videos](https://awplife.com/demo/video-gallery-premium/funny-videos/ "Funny Videos")
+* [YouTube API Gallery](https://awplife.com/demo/video-gallery-premium/ "YouTube Gallery")
+* [Vimeo API Gallery](https://awplife.com/demo/video-gallery-premium/vimeo-gallery/ "Vimeo Gallery")
+* [YouTube Playlist ID](https://awplife.com/demo/video-gallery-premium/youtube-playlist/ "Youtube Playlist ID")
+* [Wistia API Gallery](https://awplife.com/demo/video-gallery-premium/wistia-api-gallery/ "Wistia Gallery")
+* [DailyMotion API Gallery](https://awplife.com/demo/video-gallery-premium/dailymotion-api-gallery/ "Dailymotion Gallery")
+* [Mix Gallery](https://awplife.com/demo/video-gallery-premium/mix-gallery/ "Mix Gallery")
+* [Sports Videos](https://awplife.com/demo/video-gallery-premium/sports-videos/ "Sports Videos")
+* [Dance Videos](https://awplife.com/demo/video-gallery-premium/dance-videos/ "Dance Video")
+* [Funny Videos](https://awplife.com/demo/video-gallery-premium/funny-videos/ "Funny Videos")
 
 == Our Recommended Plugins ==
 
@@ -131,7 +123,7 @@ This plugin utilizes external third-party services to load video players and fet
 5. Save the gallery and copy the generated shortcode.
 6. Paste the shortcode on any page or post to display the video grid.
 
-== Frequently Asked Questions about YouTube and Vimeo Galleries ==
+== Frequently Asked Questions ==
 
 = How many videos can I add to a single YouTube video gallery? =
 There is no limit to the number of videos you can add to a single gallery.
@@ -174,15 +166,30 @@ Free users can post their questions and issues on the WordPress.org community su
 
 == Screenshots ==
 
-1. YouTube Video Gallery in two-column grid.
-2. Video playing in popup lightbox.
-3. Vimeo Video Gallery in two-column layout.
-4. Vimeo video playing inside overlay player.
-5. Mixed YouTube and Vimeo video gallery.
-6. Settings dashboard for configuring responsive columns.
-7. Admin interface for creating and managing video galleries.
+1. Uploadding Posters and feching videos by URLs.
+2. Fetching YouTbe video feed by YouTube API.
+3. Grid Layout tab options on settings page.
+4. Vimeo card style tab options on settings page.
+5. Typography tab options on settings page.
+6. Lightbox tab options on settings page.
+7. Video gallery frontend.
+8. Youtube API gallery frontend.
 
 == Changelog ==
+
+= 2.0.2 =
+* Date: 17-jul-2026
+* Fix: Implemented single JSON payload saving (`vg_slides_json`) and disabled standard slide fields on submit to prevent `max_input_vars` data loss.
+* Fix: Updated jQuery selectors to use starts-with name matching to fix bracket selector parsing issues.
+* Fix: Implemented dual-layer metadata fallback loading for slide titles and descriptions on settings panels and front-end layouts.
+
+= 2.0.1 =
+* Date: 17-jul-2026
+* Fix: Standardized Gutenberg block and Elementor widget names to "Video Gallery".
+* Fix: Resolved WP.org readme.txt formatting regarding duplicate headers, FAQ tab parsing, and blockquote list prefix indentation.
+* Fix: Implemented missing Enable Ads toggles and bypassed HTML/script sanitization constraints for administrator users.
+* Fix: Fixed ad display grid positioning by removing premium frequency settings and resolving PHP type comparison mismatch (casted floor outputs to int).
+* Fix: Fixed play icon behavior settings saving and visibility conditional logic.
 
 = 2.0.0 =
 * Date: 16-jul-2026
@@ -250,6 +257,12 @@ Free users can post their questions and issues on the WordPress.org community su
 * Tested with WordPress 6.7.2
 
 == Upgrade Notice ==
+
+= 2.0.2 =
+This update fixes saving issues (data loss / max_input_vars bypass), improves jQuery selector bracket compatibility, and implements robust dual-layer metadata rendering fallback for slide titles/descriptions. Highly recommended.
+
+= 2.0.1 =
+This update fixes in-grid ad rendering, play icon visibility settings, and updates Gutenberg/Elementor widget names. Highly recommended.
 
 = 2.0.0 =
 Major upgrade adding built-in Gutenberg block, Elementor widget, visual analytics tracker, and upgraded Lightgallery engine. Highly recommended.

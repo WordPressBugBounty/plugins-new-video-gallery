@@ -3,7 +3,7 @@
 Plugin Name: 	Video Gallery
 Plugin URI: 	https://awplife.com/wordpress-plugins/video-gallery-wordpress-plugin/
 Description: 	Create beautiful, responsive video galleries for WordPress with YouTube, Vimeo, and self-hosted video support. Features automatic YouTube API integrations, Isotope grid layouts, lightbox playback, load-more pagination, analytics tracking, and customizable styling.
-Version: 		2.0.0
+Version: 		2.0.2
 Author: 		A WP Life
 Author URI: 	http://awplife.com/
 License: 		GPL2
@@ -102,7 +102,7 @@ if ( ! class_exists( 'New_Video_Gallery' ) ) {
 		
 		protected function _constants() {
 			//Plugin Version
-			define( 'VG_PLUGIN_VER', '2.0.0' );
+			define( 'VG_PLUGIN_VER', '2.0.2' );
 			
 			//Plugin Text Domain
 			define("VGP_TXTDM","new-video-gallery" );
@@ -315,23 +315,23 @@ if ( ! class_exists( 'New_Video_Gallery' ) ) {
 		public function custom_video_gallery_shodrcode_data( $column, $post_id ) {
 			switch ( $column ) {
 				case '_video_gallery_shodrcode' :
-					echo "<input type='text' class='button button-primary' id='shortcode-" . esc_attr($post_id) . "' value='[VDGAL id=" . esc_attr($post_id) . "]' style='font-weight:bold; background-color:#32373C; color:#FFFFFF; text-align:center;' />";
-					echo "<input type='button' class='button button-primary' onclick='return GalleryCopyShortcode" . esc_attr($post_id) . "();' readonly value='Copy' style='margin-left:4px;' />";
-					echo "<span id='copy-msg-" . esc_attr($post_id) . "' class='button button-primary' style='display:none; background-color:#32CD32; color:#FFFFFF; margin-left:4px; border-radius: 4px;'>" . esc_html__('copied', 'new-video-gallery') . "</span>";
+					echo "<input type='text' id='shortcode-" . esc_attr($post_id) . "' value='[VDGAL id=" . esc_attr($post_id) . "]' readonly style='font-weight: 500; font-family: monospace; background-color: #f8fafc; color: #334155; border: 1px solid #cbd5e1; border-radius: 6px; text-align: center; padding: 6px 12px; height: 32px; line-height: 18px; box-shadow: none; outline: none; min-width: 140px;' />";
+					echo "<input type='button' onclick='return GalleryCopyShortcode" . esc_attr($post_id) . "();' readonly value='Copy' style='font-weight: 600; background-color: #4f46e5; color: #ffffff; border: none; border-radius: 6px; padding: 0 16px; height: 32px; line-height: 32px; cursor: pointer; transition: background 0.15s ease; box-shadow: 0 1px 2px rgba(79, 70, 229, 0.1); margin-left: 6px; display: inline-block; vertical-align: middle;' onmouseover='this.style.background=\"#4338ca\"' onmouseout='this.style.background=\"#4f46e5\"' />";
+					echo "<span id='copy-msg-" . esc_attr($post_id) . "' style='display:none; background-color: #10b981; color: #ffffff; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen-Sans, Ubuntu, Cantarell, \"Helvetica Neue\", sans-serif; border-radius: 6px; padding: 0 12px; height: 32px; line-height: 32px; margin-left: 6px; vertical-align: middle; font-size: 13px;'>" . esc_html__('copied', 'new-video-gallery') . "</span>";
 					echo "<script>
 						function GalleryCopyShortcode" . esc_attr($post_id) . "() {
 							var copyText = document.getElementById('shortcode-" . esc_attr($post_id) . "');
 							copyText.select();
 							document.execCommand('copy');
 							//fade in and out copied message
-							jQuery('#copy-msg-" . esc_attr($post_id) . "').fadeIn('1000', 'linear');
-							jQuery('#copy-msg-" . esc_attr($post_id) . "').fadeOut(2500,'swing');
+							jQuery('#copy-msg-" . esc_attr($post_id) . "').css('display', 'inline-block').hide().fadeIn('500', 'linear');
+							jQuery('#copy-msg-" . esc_attr($post_id) . "').fadeOut(2000,'swing');
 						}
 						</script>
 					";
 				break;
 				case '_video_gallery_duplicate' :
-					echo "<input type='button' class='button button-primary' onclick='return vg_clone_run_$post_id($post_id);' readonly value='Duplicate Gallery' style='margin-left:4px;' />";
+					echo "<input type='button' onclick='return vg_clone_run_$post_id($post_id);' readonly value='Duplicate Gallery' style='font-weight: 600; background-color: #ffffff; color: #475569; border: 1px solid #cbd5e1; border-radius: 6px; padding: 0 16px; height: 32px; line-height: 30px; cursor: pointer; transition: all 0.15s ease; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-left: 4px; display: inline-block; vertical-align: middle;' onmouseover='this.style.background=\"#f8fafc\"; this.style.color=\"#1e293b\"; this.style.borderColor=\"#94a3b8\"' onmouseout='this.style.background=\"#ffffff\"; this.style.color=\"#475569\"; this.style.borderColor=\"#cbd5e1\"' />";
 					echo "<script>
 						function vg_clone_run_$post_id(post_id){
 							if(confirm('Do you want to duplicate this Gallery?')){
@@ -683,6 +683,7 @@ if ( ! class_exists( 'New_Video_Gallery' ) ) {
 							$thumb_border_radius = (isset($_POST['api_thumb_border_radius_toggle']) && $_POST['api_thumb_border_radius_toggle'] === 'yes') ? 8 : 0;
 						}
 						$thumb_border = isset($_POST['thumb_border']) ? intval($_POST['thumb_border']) : 0;
+						$thumb_icon_tag_display = isset($_POST['thumb_icon_tag_display']) ? sanitize_text_field($_POST['thumb_icon_tag_display']) : (isset($_POST['api_thumb_icon_tag_display']) ? sanitize_text_field($_POST['api_thumb_icon_tag_display']) : 'hover');
 
 						$show_lightbox_title 			= isset($_POST['show_lightbox_title']) ? intval($_POST['show_lightbox_title']) : 1;
 						$show_lightbox_loop 			= isset($_POST['show_lightbox_loop']) ? intval($_POST['show_lightbox_loop']) : 1;
@@ -700,11 +701,8 @@ if ( ! class_exists( 'New_Video_Gallery' ) ) {
 						
 						// Ads & Monetization (Free Version Limits: 1 ad in middle)
 						// Check if the current user is allowed to save raw HTML/JS scripts (unfiltered_html)
-						if ( current_user_can( 'unfiltered_html' ) ) {
-							$gallery_ad_script          = isset($_POST['gallery_ad_script']) ? wp_unslash($_POST['gallery_ad_script']) : '';
-						} else {
-							$gallery_ad_script          = isset($_POST['gallery_ad_script']) ? wp_kses_post(wp_unslash($_POST['gallery_ad_script'])) : '';
-						}
+						$gallery_ad_script          = isset($_POST['gallery_ad_script']) ? wp_unslash($_POST['gallery_ad_script']) : '';
+						$show_ad = isset($_POST['show_ad']) ? sanitize_text_field( $_POST['show_ad'] ) : 'no';
 
 						
 						$api_thumb_title_desc_align    	= 'center';
@@ -719,38 +717,72 @@ if ( ! class_exists( 'New_Video_Gallery' ) ) {
 						$image_desc    = array();
 						$image_link    = array();
 						$poster_type    = array();
-						$image_ids_val = isset( $_POST['slide-ids'] ) ? (array) $_POST['slide-ids'] : array();
-						$image_ids_val = array_map( 'sanitize_text_field', $image_ids_val );
-						
-						foreach($image_ids_val as $image_id_raw) {
-							$image_id = absint($image_id_raw);
-							if (!$image_id) {
-								$i++;
-								continue;
+
+						if ( isset( $_POST['vg_slides_json'] ) && ! empty( $_POST['vg_slides_json'] ) ) {
+							$slides_data = json_decode( wp_unslash( $_POST['vg_slides_json'] ), true );
+							if ( is_array( $slides_data ) ) {
+								foreach ( $slides_data as $slide ) {
+									$image_id = isset( $slide['id'] ) ? absint( $slide['id'] ) : 0;
+									if ( ! $image_id ) {
+										continue;
+									}
+									$slide_title = isset( $slide['title'] ) ? sanitize_text_field( $slide['title'] ) : '';
+									$slide_type  = isset( $slide['type'] ) ? sanitize_text_field( $slide['type'] ) : '';
+									$slide_desc  = isset( $slide['desc'] ) ? sanitize_text_field( $slide['desc'] ) : '';
+									$slide_link  = isset( $slide['link'] ) ? sanitize_text_field( $slide['link'] ) : '';
+									$p_type      = isset( $slide['poster_type'] ) ? sanitize_text_field( $slide['poster_type'] ) : '';
+
+									$image_ids[]    = $image_id;
+									$image_titles[] = $slide_title;
+									$image_type[]   = $slide_type;
+									$image_desc[]   = $slide_desc;
+									$image_link[]   = $slide_link;
+									$poster_type[]  = $p_type;
+
+									if ( get_post_type( $image_id ) === 'attachment' && current_user_can( 'edit_post', $image_id ) ) {
+										$single_image_update = array(
+											'ID'           => $image_id,
+											'post_title'   => wp_slash( $slide_title ),
+											'post_content' => wp_slash( $slide_desc ),
+										);
+										wp_update_post( $single_image_update );
+									}
+								}
 							}
+						} else {
+							$image_ids_val = isset( $_POST['slide-ids'] ) ? (array) $_POST['slide-ids'] : array();
+							$image_ids_val = array_map( 'sanitize_text_field', $image_ids_val );
 							
-							$slide_title = isset($_POST['slide-title'][ $i ]) ? sanitize_text_field( $_POST['slide-title'][ $i ] ) : '';
-							$slide_type  = isset($_POST['slide-type'][ $i ]) ? sanitize_text_field( $_POST['slide-type'][ $i ] ) : '';
-							$slide_desc  = isset($_POST['slide-desc'][ $i ]) ? sanitize_text_field( $_POST['slide-desc'][ $i ] ) : '';
-							$slide_link  = isset($_POST['slide-link'][ $i ]) ? sanitize_text_field( $_POST['slide-link'][ $i ] ) : '';
-							$p_type      = isset($_POST['poster-type'][ $i ]) ? sanitize_text_field( $_POST['poster-type'][ $i ] ) : '';
+							foreach($image_ids_val as $image_id_raw) {
+								$image_id = absint($image_id_raw);
+								if (!$image_id) {
+									$i++;
+									continue;
+								}
+								
+								$slide_title = isset($_POST['slide-title'][ $i ]) ? sanitize_text_field( $_POST['slide-title'][ $i ] ) : '';
+								$slide_type  = isset($_POST['slide-type'][ $i ]) ? sanitize_text_field( $_POST['slide-type'][ $i ] ) : '';
+								$slide_desc  = isset($_POST['slide-desc'][ $i ]) ? sanitize_text_field( $_POST['slide-desc'][ $i ] ) : '';
+								$slide_link  = isset($_POST['slide-link'][ $i ]) ? sanitize_text_field( $_POST['slide-link'][ $i ] ) : '';
+								$p_type      = isset($_POST['poster-type'][ $i ]) ? sanitize_text_field( $_POST['poster-type'][ $i ] ) : '';
 
-							$image_ids[]    = $image_id;
-							$image_titles[] = $slide_title;
-							$image_type[]   = $slide_type;
-							$image_desc[]   = $slide_desc;
-							$image_link[]   = $slide_link;
-							$poster_type[]  = $p_type;
+								$image_ids[]    = $image_id;
+								$image_titles[] = $slide_title;
+								$image_type[]   = $slide_type;
+								$image_desc[]   = $slide_desc;
+								$image_link[]   = $slide_link;
+								$poster_type[]  = $p_type;
 
-							if (get_post_type($image_id) === 'attachment' && current_user_can('edit_post', $image_id)) {
-								$single_image_update = array(
-									'ID'           => $image_id,
-									'post_title'   => $slide_title,
-									'post_content' => $slide_desc,
-								);
-								wp_update_post( $single_image_update );
+								if (get_post_type($image_id) === 'attachment' && current_user_can('edit_post', $image_id)) {
+									$single_image_update = array(
+										'ID'           => $image_id,
+										'post_title'   => $slide_title,
+										'post_content' => $slide_desc,
+									);
+									wp_update_post( $single_image_update );
+								}
+								$i++;
 							}
-							$i++;
 						}
 							$gallery_settings = array(
 								'slide-ids'      				 => $image_ids,
@@ -805,6 +837,8 @@ if ( ! class_exists( 'New_Video_Gallery' ) ) {
 								'api_video_title'        		 => isset($api_video_title) ? $api_video_title : 'show',
 								'api_video_desc'        		 => isset($api_video_desc) ? $api_video_desc : 'show',
 								'gallery_ad_script'              => $gallery_ad_script,
+								'show_ad'                        => $show_ad,
+								'thumb_icon_tag_display'         => $thumb_icon_tag_display,
 
 								'api_thumb_title_desc_align'     => isset($api_thumb_title_desc_align) ? $api_thumb_title_desc_align : 'center',
 								'api_title_char_limit'           => isset($api_title_char_limit) ? $api_title_char_limit : 50,

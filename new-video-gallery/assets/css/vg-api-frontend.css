@@ -435,10 +435,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 100% !important;
     min-height: 150px;
     /* Base height so empty scripts don't collapse */
     overflow: hidden;
+    clear: both;
 }
 
 

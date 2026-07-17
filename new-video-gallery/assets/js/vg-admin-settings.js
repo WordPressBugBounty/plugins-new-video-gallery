@@ -586,7 +586,36 @@
             }
         });
 
-
+        // Intercept form submit to serialize slides into a single JSON payload (bypasses max_input_vars)
+        $('form#post').on('submit', function() {
+            var galleryOption = $('input[name^="video_gallery_option"]:checked').val();
+            if (galleryOption === 'no_api') {
+                var slides = [];
+                var $slideElements = $('#remove-slides li.slide');
+                
+                $slideElements.each(function() {
+                    var $slide = $(this);
+                    var id = $slide.find('input[name^="slide-ids"]').val();
+                    if (id) {
+                        slides.push({
+                            id: id,
+                            title: $slide.find('input[name^="slide-title"]').val() || '',
+                            type: $slide.find('select[name^="slide-type"]').val() || 'y',
+                            desc: $slide.find('textarea[name^="slide-desc"]').val() || '',
+                            link: $slide.find('input[name^="slide-link"]').val() || '',
+                            poster_type: $slide.find('input[name^="poster-type"]').val() || ''
+                        });
+                    }
+                });
+                
+                // Write serialized string to hidden field
+                $('#vg_slides_json').val(JSON.stringify(slides));
+                
+                // Disable individual slide fields so they aren't posted individually
+                $slideElements.find('input[name^="slide-ids"], select[name^="slide-type"], input[name^="slide-link"], input[name^="slide-title"], textarea[name^="slide-desc"], input[name^="poster-type"]').prop('disabled', true);
+            }
+            return true;
+        });
 
         revealSettingsPage();
     });

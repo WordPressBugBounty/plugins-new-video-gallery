@@ -89,7 +89,6 @@ $col_large_desktops_val = vg_settings_get_column_number(isset($gallery_settings[
 $col_desktops_val = vg_settings_get_column_number(isset($gallery_settings['col_desktops']) ? $gallery_settings['col_desktops'] : 'col-md-3');
 $col_tablets_val = vg_settings_get_column_number(isset($gallery_settings['col_tablets']) ? $gallery_settings['col_tablets'] : 'col-sm-4');
 $col_phones_val = vg_settings_get_column_number(isset($gallery_settings['col_phones']) ? $gallery_settings['col_phones'] : 'col-xs-6');
-$gallery_layout_mode = isset($gallery_settings['gallery_layout_mode']) ? $gallery_settings['gallery_layout_mode'] : 'masonry';
 $bg_sync_interval = isset($gallery_settings['bg_sync_interval']) ? $gallery_settings['bg_sync_interval'] : 'disabled';
 
 // Set layout option
@@ -304,8 +303,9 @@ $grayscale_percentage = isset($gallery_settings['grayscale_percentage']) ? intva
 									}
 									?>
 									<input type="text" name="slide-link[]" id="slide-link[]" style="width: 100%;" placeholder="<?php echo esc_attr($placeholder); ?>" value="<?php echo esc_attr($image_link); ?>">
-									<input type="text" name="slide-title[]" id="slide-title[]" style="width: 100%;" placeholder="<?php esc_attr_e('Video Title', 'new-video-gallery'); ?>" value="<?php echo esc_attr(get_the_title($id)); ?>">
-									<textarea name="slide-desc[]" id="slide-desc[]" placeholder="<?php esc_attr_e('Video Description', 'new-video-gallery'); ?>" style="height: 100px;width: 100%;"><?php echo esc_html($attachment->post_content); ?></textarea>
+									<?php $image_title = isset($gallery_settings['slide-title'][$count]) ? $gallery_settings['slide-title'][$count] : ''; ?>
+									<input type="text" name="slide-title[]" id="slide-title[]" style="width: 100%;" placeholder="<?php esc_attr_e('Video Title', 'new-video-gallery'); ?>" value="<?php echo esc_attr( ! empty( $image_title ) ? $image_title : get_the_title($id) ); ?>">
+									<textarea name="slide-desc[]" id="slide-desc[]" placeholder="<?php esc_attr_e('Video Description', 'new-video-gallery'); ?>" style="height: 100px;width: 100%;"><?php echo esc_html( ! empty( $image_desc ) ? $image_desc : $attachment->post_content ); ?></textarea>
 									
 									<?php
 									$is_fetched = ($poster_type === 'youtube' || $poster_type === 'vimeo' || $poster_type === 'twitch' || $poster_type === 'dailymotion' || $poster_type === 'wistia' || $poster_type === 'tiktok');
@@ -755,7 +755,7 @@ $grayscale_percentage = isset($gallery_settings['grayscale_percentage']) ? intva
 					<!-- Icon & Source Badge Display -->
 					<div class="awl-vg-setting-row">
 						<div class="awl-vg-setting-label">
-							<h4><?php esc_html_e( 'Icon & Tag Hover Behavior', 'new-video-gallery' ); ?></h4>
+							<h4><?php esc_html_e( 'Play icon behavior', 'new-video-gallery' ); ?></h4>
 							<p><?php esc_html_e( 'Show play overlays and platform tags at all times, or only on mouse hover.', 'new-video-gallery' ); ?></p> 
 						</div>
 						<div class="awl-vg-setting-field">
@@ -1163,7 +1163,7 @@ $grayscale_percentage = isset($gallery_settings['grayscale_percentage']) ? intva
 					<!-- Icon & Source Badge Display -->
 					<div class="awl-vg-setting-row">
 						<div class="awl-vg-setting-label">
-							<h4><?php esc_html_e( 'Icon & Source Badge Display', 'new-video-gallery' ); ?></h4>
+							<h4><?php esc_html_e( 'Play Icon Display', 'new-video-gallery' ); ?></h4>
 							<p><?php esc_html_e( 'Choose whether play overlay icons and source badges show only on hover or are always visible.', 'new-video-gallery' ); ?></p> 
 						</div>
 						<div class="awl-vg-setting-field">
@@ -1236,6 +1236,28 @@ $grayscale_percentage = isset($gallery_settings['grayscale_percentage']) ? intva
 				<div class="awl-vg-card" style="margin-top: 30px;">
 					<h3><?php esc_html_e('Ads & Monetization Settings', 'new-video-gallery'); ?></h3>
 
+					<!-- Enable In-Grid Ads -->
+					<div class="awl-vg-setting-row">
+						<div class="awl-vg-setting-label">
+							<h4><?php esc_html_e('Enable In-Grid Ads', 'new-video-gallery'); ?></h4>
+							<p><?php esc_html_e('Choose whether to display ads inside the gallery grid.', 'new-video-gallery'); ?></p>
+						</div>
+						<div class="awl-vg-setting-field">
+							<?php
+							$gallery_ad_script = isset($gallery_settings['gallery_ad_script']) ? $gallery_settings['gallery_ad_script'] : '<div style="background: #3b82f6; color: white; padding: 30px; text-align: center; font-weight: bold; border-radius: 8px; font-size: 18px; margin: 15px 0; width: 100%;">
+    🎉 IN-GRID ADVERTISEMENT SLOT (WORKING!)
+</div>';
+							$show_ad = isset($gallery_settings['show_ad']) ? $gallery_settings['show_ad'] : (!empty($gallery_ad_script) ? 'yes' : 'no');
+							?>
+							<div class="vg-segmented-control">
+								<input type="radio" id="show_ad_yes" name="show_ad" value="yes" <?php checked($show_ad, 'yes'); ?>>
+								<label for="show_ad_yes"><?php esc_html_e('Yes', 'new-video-gallery'); ?></label>
+								<input type="radio" id="show_ad_no" name="show_ad" value="no" <?php checked($show_ad, 'no'); ?>>
+								<label for="show_ad_no"><?php esc_html_e('No', 'new-video-gallery'); ?></label>
+							</div>
+						</div>
+					</div>
+
 					<!-- Ad Script -->
 					<div class="awl-vg-setting-row">
 						<div class="awl-vg-setting-label" style="align-items: flex-start; margin-top: 10px;">
@@ -1244,7 +1266,9 @@ $grayscale_percentage = isset($gallery_settings['grayscale_percentage']) ? intva
 						</div>
 						<div class="awl-vg-setting-field">
 							<?php
-							$gallery_ad_script = isset($gallery_settings['gallery_ad_script']) ? $gallery_settings['gallery_ad_script'] : '';
+							$gallery_ad_script = isset($gallery_settings['gallery_ad_script']) ? $gallery_settings['gallery_ad_script'] : '<div style="background: #3b82f6; color: white; padding: 30px; text-align: center; font-weight: bold; border-radius: 8px; font-size: 18px; margin: 15px 0; width: 100%;">
+    🎉 IN-GRID ADVERTISEMENT SLOT (WORKING!)
+</div>';
 							?>
 							<textarea name="gallery_ad_script" class="form-control" rows="5" style="width: 100%; border: 1px solid #dcdcde; border-radius: 4px; padding: 10px;"><?php echo esc_textarea($gallery_ad_script); ?></textarea>
 							<div class="vg-pro-notice" style="margin-top: 8px; font-size: 12px; color: #64748b;">
@@ -1559,6 +1583,7 @@ $grayscale_percentage = isset($gallery_settings['grayscale_percentage']) ? intva
 	// Nonce field for securing settings save post transactions
 	wp_nonce_field( 'vg_save_settings', 'vg_save_nonce' );
 ?>
+<input type="hidden" name="vg_slides_json" id="vg_slides_json" value="" />
 <script>
 (function($) {
 	// Helper to extract YouTube video ID from URL

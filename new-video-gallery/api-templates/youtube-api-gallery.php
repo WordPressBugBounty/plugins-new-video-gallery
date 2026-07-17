@@ -16,8 +16,10 @@ $result = $vg_gallery_object->fetch_youtube_data($video_gallery_api_key, $video_
 
 $api_title_char_limit = isset($gallery_settings['api_title_char_limit']) ? intval($gallery_settings['api_title_char_limit']) : 50;
 $api_desc_char_limit = isset($gallery_settings['api_desc_char_limit']) ? intval($gallery_settings['api_desc_char_limit']) : 150;
-$gallery_ad_frequency = isset($gallery_settings['gallery_ad_frequency']) ? intval($gallery_settings['gallery_ad_frequency']) : 0;
-$gallery_ad_script = isset($gallery_settings['gallery_ad_script']) ? $gallery_settings['gallery_ad_script'] : '';
+$gallery_ad_script = isset($gallery_settings['gallery_ad_script']) ? $gallery_settings['gallery_ad_script'] : '<div style="background: #3b82f6; color: white; padding: 30px; text-align: center; font-weight: bold; border-radius: 8px; font-size: 18px; margin: 15px 0; width: 100%;">
+    🎉 IN-GRID ADVERTISEMENT SLOT (WORKING!)
+</div>';
+$show_ad = isset($gallery_settings['show_ad']) ? $gallery_settings['show_ad'] : (!empty($gallery_ad_script) ? 'yes' : 'no');
 ?>
 <div id="your-page-column" class="not-a-part-of-youram-plugin">
     <div id="yram" class="vg-row youram-simple_<?php echo esc_attr($post_id); ?> <?php echo (isset($gallery_settings['gallery_layout_mode']) && $gallery_settings['gallery_layout_mode'] === 'fixed') ? 'vg-layout-fixed' : ''; ?>" style="--vg-cols-lg: <?php echo esc_attr($cols_lg); ?>; --vg-cols-md: <?php echo esc_attr($cols_md); ?>; --vg-cols-sm: <?php echo esc_attr($cols_sm); ?>; --vg-cols-xs: <?php echo esc_attr($cols_xs); ?>;" data-lg-config='<?php echo esc_attr(wp_json_encode(array(
@@ -46,8 +48,15 @@ $api_settings = array(
     'lazy_loading'            => isset($global_settings['lazy_loading']) ? $global_settings['lazy_loading'] : 'yes',
 );
             $api_ad_count = 0;
+            $ad_after_index = intval(floor(count($result['videos']) / 2));
+            echo '<!-- DEBUG VG ADS info (YouTube API): show_ad = ' . esc_attr($show_ad) . ', script_empty = ' . (empty($gallery_ad_script) ? 'yes' : 'no') . ', ad_after_index = ' . intval($ad_after_index) . ', count = ' . count($result['videos']) . ' -->';
             foreach ($result['videos'] as $video) {
-                if ($gallery_ad_frequency > 0 && $api_ad_count > 0 && $api_ad_count % $gallery_ad_frequency === 0 && !empty($gallery_ad_script)) {
+                $should_show_ad = false;
+                if ($show_ad === 'yes') {
+                    $should_show_ad = ($api_ad_count === $ad_after_index);
+                }
+                if ($should_show_ad && !empty($gallery_ad_script)) {
+                    echo '<!-- DEBUG VG ADS: Injected YouTube API ad container -->';
                     echo '<div class="vg-col vg-ad-container">' . $gallery_ad_script . '</div>';
                 }
                 vg_render_api_card($video, $api_settings);
@@ -60,77 +69,5 @@ $api_settings = array(
         }
         ?>
     </div>
-    <?php if ($v_gallery_load_more == 'yes' && !is_wp_error($result) && !empty($result['nextPageToken'])) { ?>
-        <div style="clear:both;"></div>
-        <div class="vg-load-more-container" style="text-align: center; margin-top: 20px;">
-            <button id="loadMoreBtn_<?php echo esc_attr($post_id); ?>" class="btn vg-load-more-btn <?php echo esc_attr($load_btn_style); ?>" data-next-token="<?php echo esc_attr($result['nextPageToken']); ?>"><?php echo esc_html($load_text); ?></button>
-        </div>
-    <?php } ?>
 </div>
-<script>
-    jQuery(document).ready(function () {
-        var postId = "<?php echo esc_js($post_id); ?>";
 
-        jQuery(document).on("click", "#loadMoreBtn_" + postId, function () {
-            var $btn = jQuery(this);
-            var pageToken = $btn.attr("data-next-token");
-            if (!pageToken) return;
-            
-            $btn.html('<span class="vg-btn-spinner"></span>')
-                .prop('disabled', true)
-                .css({'opacity': '0.8', 'cursor': 'default'});
-            
-            jQuery.ajax({
-                url: "<?php echo esc_url(admin_url('admin-ajax.php')); ?>",
-                type: "POST",
-                data: {
-                    action: "nvgall_load_more_youtube",
-                    security: "<?php echo esc_js(wp_create_nonce('vg_load_more_nonce')); ?>",
-                    post_id: postId,
-                    page_token: pageToken
-                },
-                success: function (response) {
-                    if (response.success) {
-                        var $grid = jQuery(".youram-simple_" + postId);
-                        var $items = jQuery('<div>' + response.data.html + '</div>').find('.vg-col');
-                        if ($items.length > 0) {
-                            $grid.append($items);
-                            if (typeof jQuery.fn.isotope !== 'undefined' && $grid.data('isotope')) {
-                                if (typeof jQuery.fn.imagesLoaded !== 'undefined') {
-                                    $grid.imagesLoaded(function() {
-                                        $grid.isotope('appended', $items);
-                                        $grid.isotope('layout');
-                                    });
-                                } else {
-                                    $grid.isotope('appended', $items);
-                                    $grid.isotope('layout');
-                                }
-                            }
-                        }
-                        if (response.data.nextPageToken) {
-                            $btn.attr("data-next-token", response.data.nextPageToken);
-                            $btn.html("<?php echo esc_js($load_text); ?>")
-                                .prop("disabled", false)
-                                .css({'opacity': '', 'cursor': ''});
-                        } else {
-                            $btn.html("<?php echo esc_js($no_images_text); ?>")
-                                .prop("disabled", true)
-                                .css({'opacity': '0.6', 'cursor': 'default'});
-                        }
-                    } else {
-                        $btn.html("<?php echo esc_js($no_images_text); ?>")
-                            .prop("disabled", true)
-                            .css({'opacity': '0.6', 'cursor': 'default'});
-                    }
-                },
-                error: function () {
-                    $btn.html("<?php echo esc_js($load_text); ?>")
-                        .prop("disabled", false)
-                        .css({'opacity': '', 'cursor': ''});
-                }
-            });
-        });
-
-
-    });
-</script>
